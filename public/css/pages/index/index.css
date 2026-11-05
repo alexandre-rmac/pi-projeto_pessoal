@@ -4,8 +4,12 @@ body {
     align-items: center;
     justify-content: center;
 }
-
 .main {
+    display: flex;
+    flex-direction: column;
+
+}
+.inicio {
     display: flex;
     width: 90rem;
     min-height: 40.625rem;

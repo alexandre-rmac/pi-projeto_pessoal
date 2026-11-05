@@ -75,12 +75,16 @@ button:hover {
     cursor: pointer;
     color: var(--fundo);
     background-color: var(--destaque);
-    box-shadow: 
+    box-shadow:
         0 0 0.3rem 0.15rem var(--borda-forte),
         inset 0 0 1rem 0.1rem var(--destaque-forte);
 }
 
 .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     display: flex;
     flex-direction: row;
     height: 5.5rem;
@@ -89,6 +93,7 @@ button:hover {
     align-items: center;
     align-self: stretch;
 
+    background-color: var(--fundo);
     border-bottom: 1px solid var(--borda);
 }
 
@@ -99,5 +104,13 @@ button:hover {
 
 .header-texto-h {
     font-family: var(--fonte-titulo);
-    font-size: 1.6875rem;
+    font-size: 2.5rem;
+}
+
+.header li{
+    font-size: 1.75rem;
+}
+
+section {
+    margin-top: 4rem;
 }
