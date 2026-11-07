@@ -6,24 +6,25 @@
 comandos para mysql server
 */
 
-CREATE DATABASE aquatech;
+CREATE DATABASE mtg_alramac;
 
-USE aquatech;
+USE mtg_alramac;
 
-CREATE TABLE empresa (
+CREATE TABLE cadastro (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	razao_social VARCHAR(50),
-	cnpj CHAR(14),
-	codigo_ativacao VARCHAR(50)
+	email VARCHAR(50) NOT NULL,
+	senha VARCHAR(50) NOT NULL,
+	dt_cadastro DATE DEFAULT DATE(CURRENT_TIMESTAMP),
+	codigo_ativacao VARCHAR(50),
+	status_cadastro TINYINT NOT NULL DEFAULT 1
 );
 
 CREATE TABLE usuario (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(50),
-	email VARCHAR(50),
-	senha VARCHAR(50),
-	fk_empresa INT,
-	FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
+	nome VARCHAR(50) NOT NULL,
+
+	fk_cadastro INT NOT NULL,
+	FOREIGN KEY (fk_cadastro) REFERENCES cadastro(id)
 );
 
 CREATE TABLE aviso (
@@ -34,25 +35,37 @@ CREATE TABLE aviso (
 	FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
 );
 
-create table aquario (
-/* em nossa regra de negócio, um aquario tem apenas um sensor */
+create table deck (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	descricao VARCHAR(300),
-	fk_empresa INT,
-	FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
+	nome VARCHAR(255),
+    commander VARCHAR(100),
+    cores CHAR(5),
+    dt_criacao DATE,
+	fk_usuario INT,
+	FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
+)AUTO_INCREMENT = 1000;
+
+create table carta (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(255),
+	codigo VARCHAR(20) UNIQUE, -- uuid
+    cmc INT,
+    tipo VARCHAR(255),
+    cores CHAR(5)
 );
 
-/* esta tabela deve estar de acordo com o que está em INSERT de sua API do arduino - dat-acqu-ino */
-
-create table medida (
+create table tipo_board (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	temperatura DECIMAL,
-	momento DATETIME,
-	fk_aquario INT,
-	FOREIGN KEY (fk_aquario) REFERENCES aquario(id)
+    descricao VARCHAR(50)
 );
 
-insert into empresa (razao_social, codigo_ativacao) values ('Empresa 1', 'ED145B');
-insert into empresa (razao_social, codigo_ativacao) values ('Empresa 2', 'A1B2C3');
-insert into aquario (descricao, fk_empresa) values ('Aquário de Estrela-do-mar', 1);
-insert into aquario (descricao, fk_empresa) values ('Aquário de Peixe-dourado', 2);
+create table deck_carta (
+	fk_deck INT,
+    fk_carta INT,
+    fk_tipo_board,
+    quantidade INT,
+    PRIMARY KEY(fk_deck, fk_carta, fk_tipo_board),
+    FOREIGN KEY (fk_deck) REFERENCES deck(id),
+    FOREIGN KEY (fk_carta) REFERENCES carta(id),
+    FOREIGN KEY (fk_tipo_board) REFERENCES tipo_board(id)
+);
