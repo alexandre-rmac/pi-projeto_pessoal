@@ -5,16 +5,11 @@ function entrar() {
     aguardar();
 
     const ipt_email = document.getElementById('email_input').value
-    const msg_email = document.getElementById('email_msg')
     const ipt_senha = document.getElementById('senha_input').value
-    const msg_senha = document.getElementById('senha_msg')
+    const msg_erro_login = document.getElementById('erro_login_msg')
 
-    if (ipt_email == "") {
-        msg_email.innerHTML = 'Insira seu email'
-        finalizarAguardar();
-        return false;
-    } else if (ipt_senha == "") {
-        msg_senha.innerHTML = 'Insira sua senha'
+    if (ipt_email == "" || ipt_senha == "") {
+        msg_erro_login.innerHTML = 'Insira seu email e sua senha'
         finalizarAguardar();
         return false;
     }
@@ -72,5 +67,6 @@ function entrar() {
 }
 
 function sumirMensagem() {
-    cardErro.style.display = "none"
+    msg_email.innerHTML = ''
+    msg_senha.innerHTML = ''
 }

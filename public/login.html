@@ -70,13 +70,14 @@
                     <div class="form-campo">
                         <p class="form-campo-nome">E-mail</p>
                         <input id="email_input" class="form-campo-input" type="text"
-                        placeholder="Digite seu email cadastrado">
-                        <p id="email_msg" class="form-msg">Email inválido</p>
+                            placeholder="Digite seu email cadastrado">
                     </div>
                     <div class="form-campo">
                         <p class="form-campo-nome">Senha</p>
                         <input id="senha_input" class="form-campo-input" type="password" placeholder="*******">
-                        <p id="senha_msg" class="form-msg">Senha Inválida</p>
+                    </div>
+                    <div class="erro-msg-container">
+                        <p id="erro_login_msg" class="p-erro-msg"></p>
                     </div>
                     <button id="btn_entrar" class="form-btn-entrar">
                         <i class="fa-solid fa-arrow-right-long"></i>
@@ -95,7 +96,7 @@
                     </div>
                     <div class="form-footer">
                         <i class="fa-solid fa-fingerprint"></i>
-                         <p class="form-descricao">Seu deck, no seu espaço</p>
+                        <p class="form-descricao">Seu deck, no seu espaço</p>
                     </div>
 
                     <div id="div_erros_login"></div>

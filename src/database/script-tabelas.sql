@@ -37,38 +37,35 @@ CREATE TABLE aviso (
 
 create table deck (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	descricao VARCHAR(300),
+	nome VARCHAR(255),
+    commander VARCHAR(100),
+    cores CHAR(5),
+    dt_criacao DATE,
 	fk_usuario INT,
 	FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
 )AUTO_INCREMENT = 1000;
 
-create table card (
+create table carta (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(100),
-	codigo VARCHAR(20),
-
+	nome VARCHAR(255),
+	codigo VARCHAR(20) UNIQUE, -- uuid
+    cmc INT,
+    tipo VARCHAR(255),
+    cores CHAR(5)
 );
 
-create table mainboard (
-	fk_deck INT,
-	fk_carta INT,
-	PRIMARY KEY (fk_deck, fk_carta),
-	FOREIGN KEY (fk_deck) REFERENCES deck(id),
-	FOREIGN KEY (fk_carta) REFERENCES carta(id)
+create table tipo_board (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    descricao VARCHAR(50)
 );
 
-create table sideboard (
+create table deck_carta (
 	fk_deck INT,
-	fk_carta INT,
-	PRIMARY KEY (fk_deck, fk_carta),
-	FOREIGN KEY (fk_deck) REFERENCES deck(id),
-	FOREIGN KEY (fk_carta) REFERENCES carta(id)
-);
-
-create table maybeboard (
-	fk_deck INT,
-	fk_carta INT,
-	PRIMARY KEY (fk_deck, fk_carta),
-	FOREIGN KEY (fk_deck) REFERENCES deck(id),
-	FOREIGN KEY (fk_carta) REFERENCES carta(id)
+    fk_carta INT,
+    fk_tipo_board,
+    quantidade INT,
+    PRIMARY KEY(fk_deck, fk_carta, fk_tipo_board),
+    FOREIGN KEY (fk_deck) REFERENCES deck(id),
+    FOREIGN KEY (fk_carta) REFERENCES carta(id),
+    FOREIGN KEY (fk_tipo_board) REFERENCES tipo_board(id)
 );

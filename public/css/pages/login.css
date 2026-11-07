@@ -160,16 +160,24 @@
     background: var(--fundo-alt);
 }
 
-.form-msg {
+.erro-login-container {
+    position: absolute;
+    bottom: 0.1rem;
+    right: 0.1rem;
+}
+
+.p-erro-msg {
+    position: absolute;
     padding: 0;
     margin: 0;
     color: var(--destaque-vermelho);
     font-family: var(--fonte-corpo);
-    font-size: 0.85rem;
+    font-size: 1rem;
 }
 
 .form-btn-entrar {
     display: flex;
+    margin-top: 1rem;
     width: 100%;
     height: 2.25rem;
     padding: 0 1.25rem;
