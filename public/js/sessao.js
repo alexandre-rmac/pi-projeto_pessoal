@@ -19,18 +19,20 @@ function limparSessao() {
 
 // carregamento (loading)
 function aguardar() {
+    console.log("aguardar")
     // var divAguardar = document.getElementById("div_aguardar");
     // divAguardar.style.display = "flex";
 }
 
 function finalizarAguardar(texto) {
-    var divAguardar = document.getElementById("div_aguardar");
-    divAguardar.style.display = "none";
-
-    var divErrosLogin = document.getElementById("div_erros_login");
+    // var divAguardar = document.getElementById("div_aguardar");
+    // divAguardar.style.display = "none";
+    console.log('finalizar')
+    // var divErrosLogin = document.getElementById("div_erros_login");
     if (texto) {
-        divErrosLogin.style.display = "flex";
-        divErrosLogin.innerHTML = texto;
+        console.log('finalizar:' + texto)
+        // divErrosLogin.style.display = "flex";
+        // divErrosLogin.innerHTML = texto;
     }
 }
 

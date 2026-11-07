@@ -114,3 +114,9 @@ button:hover {
 section {
     margin-top: 4rem;
 }
+
+.img-icone {
+    display: inline-block;
+    content: url(../assets/icon/favicon2.svg) ;
+
+}

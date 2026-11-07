@@ -19,17 +19,17 @@
   <script src="./js/cadastro.js" defer></script>
 </head>
 
-<body onload="listar()">
+<body>
   <div class="header">
     <div class="header-titulo">
-      <img src="../public/assets/icon/favicon2.svg" alt="A Forja">
+      <div class="img-icone"></div>
       <h1 class="header-texto-h">A Forja</h1>
     </div>
 
     <div class="navbar">
       <ul class="navbar-ul">
         <li class="agora">
-          <a href="#">Inicial</a>
+          <a href="index.html">Inicial</a>
         </li>
         <li>|</li>
         <li>
@@ -37,7 +37,7 @@
         </li>
         <li>|</li>
         <li>
-          <a href="cadastro.html">Cadastro</a>
+          <a href="#">Cadastro</a>
         </li>
       </ul>
     </div>
@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="form-container">
-        <div class="form-container-interior">
+        <form class="form-container-interior">
           <p class="form-subtitulo">ACENDA A SUA FORJA</p>
           <h3 class="form-titulo">Criar Conta</h3>
           <p class="form-descricao">Seu espaço para criar, salvar e aperfeiçoar seus decks de Commander.</p>
@@ -79,9 +79,9 @@
           <div class="erro-msg-container">
             <p id="erro_senha_msg" class="p-erro-msg"></p>
           </div>
-          <button id="btn_entrar" class="form-btn-entrar">
+          <button type="button" id="btn_cadastrar" class="form-btn-entrar">
             <i class="fa-solid fa-arrow-right-long"></i>
-            Entrar
+            Cadastrar
           </button>
           <div class="form-line-ou">
             <span class="traco longo"></span>
@@ -99,7 +99,7 @@
 
           <div id="div_erros_login"></div>
 
-        </div>
+        </form>
       </div>
     </div>
   </section>

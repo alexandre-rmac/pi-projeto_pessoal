@@ -4,11 +4,13 @@ body {
     align-items: center;
     justify-content: center;
 }
+
 .main {
     display: flex;
     flex-direction: column;
 
 }
+
 .inicio {
     display: flex;
     width: 90rem;
@@ -88,6 +90,11 @@ body {
     border-radius: 0.375rem;
     border: 1px solid #34382D;
     background: var(--fundo-alt);
+}
+
+.img-visao {
+    display: inline-block;
+    content: url(../../../assets/imgs/mundo.svg);
 }
 
 .previa {
