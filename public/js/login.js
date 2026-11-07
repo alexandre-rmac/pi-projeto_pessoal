@@ -1,26 +1,33 @@
 const btn_entrar = document.getElementById('btn_entrar')
-btn_entrar.addEventListener('click', entrar)
+const msg_erro_login = document.getElementById('erro_login_msg')
 
-function entrar() {
+btn_entrar.addEventListener('click', entrar)
+window.addEventListener('pageshow', () => {
+    btn_entrar.disabled = false
+})
+
+async function entrar(event) {
+    event.preventDefault()
+    btn_entrar.disabled = true
     aguardar();
 
     const ipt_email = document.getElementById('email_input').value
     const ipt_senha = document.getElementById('senha_input').value
-    const msg_erro_login = document.getElementById('erro_login_msg')
 
     if (ipt_email == "" || ipt_senha == "") {
         msg_erro_login.innerHTML = 'Insira seu email e sua senha'
+        btn_entrar.disabled = false
         finalizarAguardar();
         return false;
     }
     else {
-        setInterval(sumirMensagem, 5000)
+        setTimeout(sumirMensagem, 5000)
     }
 
     console.log("FORM LOGIN: ", ipt_email);
     console.log("FORM SENHA: ", ipt_senha);
 
-    fetch("/usuarios/autenticar", {
+    await fetch("/usuarios/autenticar", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -35,17 +42,23 @@ function entrar() {
         if (resposta.ok) {
             console.log(resposta);
 
-            resposta.json().then(json => {
+            return resposta.json().then(json => {
                 console.log(json);
                 console.log(JSON.stringify(json));
                 sessionStorage.EMAIL_USUARIO = json.email;
                 sessionStorage.NOME_USUARIO = json.nome;
                 sessionStorage.ID_USUARIO = json.id;
-                sessionStorage.AQUARIOS = JSON.stringify(json.aquarios)
+                sessionStorage.DECKS_USUARIO = JSON.stringify(json.decks)
 
-                setTimeout(function () {
-                    window.location = "./dashboard/cards.html";
-                }, 1000); // apenas para exibir o loading
+                if (json.decks.length === 0) {
+                    setTimeout(function () { 
+                        window.location = './usuario/criarDeck.html';
+                    }, 1000)
+                } else {
+                    setTimeout(function () {
+                        window.location = "./usuario/perfil.html";
+                    }, 1000);
+                }
 
             });
 
@@ -53,7 +66,7 @@ function entrar() {
 
             console.log("Houve um erro ao tentar realizar o login!");
 
-            resposta.text().then(texto => {
+            return resposta.text().then(texto => {
                 console.error(texto);
                 finalizarAguardar(texto);
             });
@@ -62,11 +75,8 @@ function entrar() {
     }).catch(function (erro) {
         console.log(erro);
     })
-
-    return false;
 }
 
 function sumirMensagem() {
-    msg_email.innerHTML = ''
-    msg_senha.innerHTML = ''
+    msg_erro_login.innerHTML = ''
 }
