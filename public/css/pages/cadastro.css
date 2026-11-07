@@ -1,0 +1,22 @@
+.cadastro-container {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.cadastro-apresentacao {
+    background-image:
+        linear-gradient(180deg,
+            rgba(18, 19, 16, 0.06) 0%,
+            rgba(18, 19, 16, 0.20) 25%,
+            rgba(18, 19, 16, 1) 100%),
+        url(../../assets/imgs/forja.svg);
+    display: flex;
+    width: 38.75rem;
+    padding: 3rem;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    align-self: stretch;
+}
