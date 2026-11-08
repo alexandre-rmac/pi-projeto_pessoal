@@ -10,36 +10,18 @@
 
     <link rel="stylesheet" href="./css/global.css">
     <link rel="stylesheet" href="./css/pages/index/index.css">
-    <link rel="icon" href="./assets/icon/favicon2.ico">
+    <link rel="stylesheet" href="./css/navbar.css">
+    <link rel="icon" href="/assets/icon/favicon2.ico">
 
-    <script src="./js/sessao.js"></script>
+    <!-- <script src="./js/sessao.js"></script> -->
+    <script src="/js/navbar.js"></script>
     <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
 
 </head>
 
 <body>
-    <div class="header">
-        <div class="header-titulo">
-            <div class="img-icone"></div>
-            <h1 class="header-texto-h">A Forja</h1>
-        </div>
-
-        <div class="navbar">
-            <ul class="navbar-ul">
-                <li class="agora">
-                    <a href="#">Inicial</a>
-                </li>
-                <li>|</li>
-                <li>
-                    <a href="login.html">Login</a>
-                </li>
-                <li>|</li>
-                <li>
-                    <a href="cadastro.html">Cadastro</a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <div id="navbar-container"></div>
+    
     <section class="main">
         <div class="inicio">
             <div class="apresentacao">
@@ -51,10 +33,10 @@
                 <p class="descricao">Construa seu deck de Commander com intenção. Encontre cartas, valide suas escolhas
                     e
                     monte sua estratégia visualizando os dados em um dashboard.</p>
-                <button id="comecar_forja">
-                    <i class="fa-solid fa-arrow-right-long"></i>
+                <a class="btn" href="/login.html">
+                    <i class="fa-solid fa-arrow-right"></i>
                     Começar a forjar
-                </button>
+                </a>
                 <p class="main-footer">Escolha o seu Commander e comece a forjar!</p>
             </div>
             <div class="visao">
@@ -159,10 +141,10 @@
                     <h2 class="recursos-chamado-titulo">Sua próxima lista merece uma boa forja.</h2>
                     <p class="recursos-chamado-descricao">Crie sua conta e comece pelo comandante.</p>
                 </div>
-                <button id="criar_conta">
-                    <i class="fa-solid fa-arrow-right-long"></i>
+                <a class="btn" href="/cadastro.html">
+                    <i class="fa-solid fa-arrow-right"></i>
                     Criar minha conta
-                </button>
+                </a>
             </div>
         </div>
         <div class="footer">

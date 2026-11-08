@@ -62,22 +62,27 @@ function cadastrar(req, res) {
         res.status(400).send("Sua senha está undefined!");
     } else {
 
-        // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nome, email, senha)
-            .then(
-                function (resultado) {
-                    res.json(resultado);
+        usuarioModel.buscarEmail(email)
+            .then(function (existente) {
+                if (existente.length > 0) {
+                    return res.status(409).json({ mensagem: "Este email já está cadastrado." })
                 }
-            ).catch(
-                function (erro) {
-                    console.log(erro);
-                    console.log(
-                        "\nHouve um erro ao realizar o cadastro! Erro: ",
-                        erro.sqlMessage
+                usuarioModel.cadastrar(nome, email, senha)
+                    .then(
+                        function (resultado) {
+                            return res.status(201).json(resultado);
+                        })
+                    .catch(
+                        function (erro) {
+                            console.log(erro);
+                            console.log(
+                                "\nHouve um erro ao realizar o cadastro! Erro: ",
+                                erro.sqlMessage
+                            );
+                            return res.status(500).json(erro.sqlMessage);
+                        }
                     );
-                    res.status(500).json(erro.sqlMessage);
-                }
-            );
+            })
     }
 }
 

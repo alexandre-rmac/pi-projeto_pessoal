@@ -23,14 +23,20 @@ async function cadastrar(nome, email, senha) {
     const resultadoCadastro = await database.executar(
         'INSERT INTO cadastro (email, senha) VALUES (?, ?);', [email, senha]
     )
-
     // registrar usuario com fk_cadastro correto
     await database.executar(
         'INSERT INTO usuario (nome, fk_cadastro) VALUES (?, ?);', [nome, resultadoCadastro.insertId]
     )
 }
 
+async function buscarEmail(email) {
+    return database.executar(
+        'SELECT id FROM cadastro WHERE email = ?', [email]
+    )
+}
+
 module.exports = {
     autenticar,
-    cadastrar
+    cadastrar,
+    buscarEmail
 };
