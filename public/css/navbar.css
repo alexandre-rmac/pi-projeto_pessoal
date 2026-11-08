@@ -1,0 +1,84 @@
+body {
+    margin-top: 2rem;
+}
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    padding: 0.5rem 4rem;
+
+    background-color: var(--fundo);
+    border-bottom: 1px solid var(--borda);
+}
+
+.navbar-head {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.navbar-logo {
+    display: inline-block;
+    content: url(../assets/icon/favicon2.svg);
+    
+}
+
+.navbar-titulo {
+    font-family: var(--fonte-titulo);
+    font-size: 2rem;
+}
+
+.navbar-link-container {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+}
+.navbar-link-container p {
+    color: var(--borda-forte);
+    font-size: 1.75rem;
+}
+.navbar-link {
+    font-family: var(--fonte-corpo);
+    font-size: 1.15rem;
+    transition: 150ms;
+}
+.navbar-link.active{
+    color: var(--destaque);
+    border-bottom: 0.1rem solid var(--borda-forte);
+}
+
+.navbar-usuario-flag {
+    display: flex;
+    width: 2.1rem;
+    height: 2.1rem;
+    justify-content: center;
+    align-items: center;
+    /* align-self: baseline; */
+    cursor: pointer;
+    font-family: var(--fonte-titulo);
+    font-weight: 700;
+    background-color: var(--fundo-destaque);
+    color: var(--destaque-suave);
+    border-radius: 50%;
+    transition: all ease-in 150ms;
+}
+.navbar-usuario-flag:hover{
+    background-color: var(--destaque);
+    color: var(--fundo-alt);
+    box-shadow: 0 0 0.1rem 0.1rem var(--destaque-suave);
+}
+
+.navbar-link-sair{
+    display: inline-block;
+    
+}
+.fa-arrow-right-from-bracket {
+    margin-left: 0.25rem;
+    font-size: 1rem;
+}

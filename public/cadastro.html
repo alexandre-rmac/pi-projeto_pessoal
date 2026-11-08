@@ -8,40 +8,20 @@
 
   <title>Alramac | Cadastro</title>
 
-  <link rel="stylesheet" href="./css/global.css">
-  <link rel="stylesheet" href="./css/pages/login.css">
-  <link rel="stylesheet" href="./css/pages/cadastro.css">
-  <link rel="icon" href="./assets/icon/favicon2.ico">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/pages/login.css">
+  <link rel="stylesheet" href="/css/pages/cadastro.css">
+  <link rel="icon" href="/assets/icon/favicon2.ico">
   <link rel="preconnect" href="https://fonts.gstatic.com">
 
   <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
-  <script src="./js/sessao.js"></script>
-  <script src="./js/cadastro.js" defer></script>
+  <script src="/js/navbar.js"></script>
+  <script src="/js/cadastro.js" defer></script>
 </head>
 
 <body>
-  <div class="header">
-    <div class="header-titulo">
-      <div class="img-icone"></div>
-      <h1 class="header-texto-h">A Forja</h1>
-    </div>
-
-    <div class="navbar">
-      <ul class="navbar-ul">
-        <li class="agora">
-          <a href="index.html">Inicial</a>
-        </li>
-        <li>|</li>
-        <li>
-          <a href="login.html">Login</a>
-        </li>
-        <li>|</li>
-        <li>
-          <a href="#">Cadastro</a>
-        </li>
-      </ul>
-    </div>
-  </div>
+  <div id="navbar-container"></div>
 
   <section class="cadastro">
     <div class="cadastro-container">
@@ -50,7 +30,8 @@
           <p class="apresentacao-subtitulo">A SUA PRÓXIMA ESTRATÉGIA COMEÇA AQUI</p>
           <h3 class="apresentacao-titulo">Escolha um Commander e comece a forjar</h3>
           <p class="apresentacao-descricao">Crie sua conta para criar, editar e salvar sua coleção.</p>
-          <p class="apresentacao-destaque"><span class="traco"></span>CRIE SUAS ESTRATÉGIAS COM INFINITAS POSSIBILIDADES.</p>
+          <p class="apresentacao-destaque"><span class="traco"></span>CRIE SUAS ESTRATÉGIAS COM INFINITAS
+            POSSIBILIDADES.</p>
         </div>
       </div>
       <div class="form-container">
@@ -60,7 +41,8 @@
           <p class="form-descricao">Seu espaço para criar, salvar e aperfeiçoar seus decks de Commander.</p>
           <div class="form-campo">
             <p class="form-campo-nome">Nome</p>
-            <input id="cadastro_nome_input" class="form-campo-input" type="text" placeholder="Crie um apelido para você">
+            <input id="cadastro_nome_input" class="form-campo-input" type="text"
+              placeholder="Crie um apelido para você">
           </div>
           <div class="form-campo">
             <p class="form-campo-nome">E-mail</p>
@@ -68,7 +50,18 @@
               placeholder="Insira seu email para contato">
           </div>
           <div class="form-campo">
-            <p class="form-campo-nome">Senha <span id="validacao_senha" class="validacao_senha"></span></p>
+            <div class="senha-p-container">
+              <p class="form-campo-nome">Senha</p>
+              <p id="senha_tooltip" class="senha-tootip"><i class="fa-solid fa-circle-question"></i></p>
+              <div id="pop-up" class="tooltip-pop">
+                Verificação de senha Forte:<br>
+                  - Conter no mínimo 8 caracteres<br>
+                  - Conter no mínimo uma letra maiúscula<br>
+                  - Conter no mínimo uma letra minúscula<br>
+                  - Conter no mínimo um número<br>
+                  - Conter no mínimo um caractere específico (!@#$%&*?)
+              </div>
+            </div>
             <input id="cadastro_senha_input" class="form-campo-input" type="password" placeholder="Crie uma senha">
           </div>
           <div class="form-campo">
@@ -78,6 +71,9 @@
           </div>
           <div class="erro-msg-container">
             <p id="erro_senha_msg" class="p-erro-msg"></p>
+          </div>
+          <div class="erro-msg-container">
+            <p id="erro_login_msg" class="p-erro-msg"></p>
           </div>
           <button type="button" id="btn_cadastrar" class="form-btn-entrar">
             <i class="fa-solid fa-arrow-right-long"></i>
@@ -97,7 +93,6 @@
             <p class="form-descricao">Seu deck, no seu espaço</p>
           </div>
 
-          <div id="div_erros_login"></div>
 
         </form>
       </div>

@@ -20,3 +20,41 @@
     align-items: flex-start;
     align-self: stretch;
 }
+
+.senha-p-container {
+    display: flex;
+    width: 98%;
+    justify-content: space-between;
+}
+
+.senha-tootip {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    width: 1.5rem;
+    height: 1.5rem;
+    
+    align-items: center;
+    justify-content: center;
+    background-color: var(--fundo-destaque);
+    color: var(--destaque);
+    border-radius: 50%;
+    transition: all ease-out 150ms;
+}
+
+.senha-tootip:hover {
+    box-shadow: 0 0 .1rem 0.1rem var(--destaque);
+}
+
+.tooltip-pop {
+    pointer-events: none;
+    position: absolute;
+    display: none;
+    width: max-content;
+    margin: 0;
+    padding: 0.3rem;
+    background-color: var(--fundo-destaque);
+    border: 0.1rem solid var(--borda-forte);
+    border-radius: 0.3rem;
+    transform: translateX(-2rem);
+}
