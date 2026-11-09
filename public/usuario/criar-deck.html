@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alramac - Criar Novo Deck</title>
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/pages/criar-deck.css">
+    <link rel="icon" href="/assets/icon/favicon2.ico">
+
+    <script src="/js/navbar.js"></script>
+    <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+
+    <section class="criar-deck">
+        <div class="criar-deck-titulo-container">
+            <p class="subtitulo">UMA NOVA ESTRATÉGIA</p>
+            <h3 class="titulo">Criar Deck</h3>
+            <p class="descricao">Dê um nome à sua próxima lista e escolha um Commander.</p>
+        </div>
+        <div class="criar-deck-container">
+            <div class="criar-deck-form">
+                <div class="form-titulo-container">
+                    <h3 class="form-titulo">Os primeiros detalhes</h3>
+                    <p class="form-descricao">Um nome para sua estratégia. Um comandante para dar a direção.</p>
+                </div>
+                <div class="form-nome-container">
+                    <p class="form-nome">Nome do Deck</p>
+                    <input type="text" class="input-nome" placeholder="[Nome do Deck]">
+                    <p class="form-nome-descricao">Você pode alterar o nome depois.</p>
+                </div>
+                <div class="form-commander-container">
+                    <p class="form-commander">Commander</p>
+                    <input type="text" class="input-commander" placeholder="Buscar Commander por nome">
+                    <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
+                    <p class="form-commander-descricao">Busque por uma carta elegível para ser seu comandante.</p>
+                </div>
+                <div class="form-selecionado-container">
+                    <div class="selecionado-card">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <div class="selecionado-descricao-container">
+                        <p class="selecionado-titulo">COMMANDER SELECIONADO</p>
+                        <h4 class="selecionado-commander">[Nome do Commander]</h4>
+                        <div class="selecionado-cores">Verde e Branco</div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="previa-container">
+                <h3 class="previa-titulo">Prévia do Commander</h3>
+                <div class="previa-exibir-carta" id="previa_carta"></div>
+                <div class="criar-deck-botoes">
+                    <button id="criar_deck"><i class="fa-solid fa-plus"></i> Criar Deck</button>
+                    <p class="criar-descricao">Após criar o deck, você continua em Editar Deck</p>
+                    <a class="criar-cancelar" href="/usuario/perfil.html">Cancelar e voltar ao Perfil</a>
+                </div>
+            </div>
+        </div>
+        <div class="editar-deck-footer">
+            <i class="fa-regular fa-bookmark"></i>
+            As demais cartas serão selecionadas em Editar Deck. Após escolher o seu Commander, você poderá importar uma
+            lista de cartas.
+        </div>
+    </section>
+</body>
+
+</html>

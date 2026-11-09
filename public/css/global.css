@@ -73,9 +73,3 @@ button:hover, .btn:hover {
     0 0 0.3rem 0.15rem var(--borda-forte),
     inset 0 0 1rem 0.1rem var(--destaque-forte);
 }
-
-.btn {
-    display: inline;
-    align-content: center;
-    color: var(--fundo-alt);
-}

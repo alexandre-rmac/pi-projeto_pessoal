@@ -9,7 +9,7 @@ if (!sessionStorage.NOME_USUARIO && window.location.pathname.includes("/usuario/
         login: "/login.html",
         cadastro: "/cadastro.html",
         perfil: "/usuario/perfil.html",
-        criarDeck: "/usuario/criarDeck.html",
+        criarDeck: "/usuario/criar-deck.html",
         avisos: "/usuario/mural.html",
     };
 
