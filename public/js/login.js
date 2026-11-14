@@ -52,7 +52,7 @@ async function entrar(event) {
 
                 if (json.decks.length === 0) {
                     setTimeout(function () { 
-                        window.location = './usuario/criarDeck.html';
+                        window.location = './usuario/criar-deck.html';
                     }, 1000)
                 } else {
                     setTimeout(function () {

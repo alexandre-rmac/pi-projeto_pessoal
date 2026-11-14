@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Deck - MTG Alramac</title>
+    <link rel="icon" href="/assets/icon/favicon2.ico">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/pages/editarDeck.css">
+    <link rel="stylesheet" href="/css/cardsComponent.css">
+    <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/fetch/fetchLoad.js" defer></script>
+    <script src="/js/fetch/fetchApi.js" defer></script>
+    <script src="/js/fetch/cardRender.js" defer></script>
+    <script src="/js/editarDeck.js" defer></script>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    <div id="loading-overlay" class="hidden"><div class="spinner"></div></div>
+    <div id="card-hover-modal" class="hidden"></div>
+
+    <main class="container">
+        <!-- SIDEBAR ESQUERDA -->
+        <aside class="sidebar-esquerda" style="display: flex; flex-direction: column;">
+            <h2 class="titulo" style="font-size: 1.5rem; margin-bottom: 1rem;">Encontre sua próxima carta</h2>
+            
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-card" placeholder="Buscar por nome da carta...">
+                <div id="suggestions" class="suggestions"></div>
+            </div>
+
+            <!-- ÁREA DE EXIBIÇÃO (PREVIEW) -->
+            <div id="preview-carta" class="preview-container hidden" style="margin-top: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                <div id="preview-card-render"></div>
+                
+                <!-- Controles de Ação no Preview -->
+                <div id="preview-acoes" class="preview-acoes hidden" style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem; padding: 0 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <label for="input-qtd" style="font-size: 0.85rem; color: var(--texto-suave);">Qtd:</label>
+                        <input type="number" id="input-qtd" min="1" value="1" style="width: 60px; padding: 4px; border-radius: 4px; border: 1px solid var(--borda); background: var(--fundo); color: var(--texto);">
+                        <select id="select-board" style="flex-grow: 1; padding: 4px; border-radius: 4px; border: 1px solid var(--borda); background: var(--fundo); color: var(--texto);">
+                            <option value="1">Mainboard</option>
+                            <option value="2">Sideboard</option>
+                            <option value="3">Maybeboard</option>
+                            <option value="4">Wishboard</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="btn-mover-preview" class="btn-outline" style="flex-grow: 1; font-size: 0.85rem; padding: 0.5rem;">Mover</button>
+                        <button id="btn-excluir-preview" class="btn-outline btn-excluir" style="flex-grow: 1; font-size: 0.85rem; padding: 0.5rem;">Excluir</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="flex-grow: 1;"></div> <!-- Empurra os botões para baixo -->
+
+            <!-- BOTÕES INFERIORES -->
+            <button class="btn" style="width: 100%; margin-top: 0.5rem;">Pesquisa Avançada</button>
+            <div class="csv-import" style="margin-top: 1rem;">
+                <label for="csv-file" class="btn-outline" style="width: 100%;">
+                    <i class="fa-solid fa-file-csv"></i> Importar Lista (CSV)
+                </label>
+                <input type="file" id="csv-file" accept=".csv" style="display: none;">
+            </div>
+        </aside>
+
+        <!-- ÁREA CENTRAL DO DECK -->
+        <section class="deck-area">
+            <div class="deck-header">
+                <div>
+                    <h1 class="titulo" id="titulo-deck">[Nome do deck]</h1>
+                    <p class="descricao" id="subtitulo-comandante">Comandante: Carregando...</p>
+                </div>
+                <div class="status-salvamento" id="status-salvamento"><i class="fa-solid fa-check"></i> Salvo</div>
+            </div>
+
+            <div id="area-comandante" class="comandante-box"></div>
+
+            <!-- ACCORDION DA MAINBOARD -->
+            <div class="board-details" data-board-id="1" style="margin-top: 1.5rem;">
+                <div class="board-header-toggle" id="toggle-mainboard">
+                    <span><i class="fa-solid fa-chevron-down"></i> Mainboard <span class="badge" id="badge-mainboard">0</span></span>
+                </div>
+                
+                <div class="board-content" id="conteudo-mainboard">
+                    <!-- Grid -->
+                    <div id="grid-cmc-mainboard" class="grid-cmc"></div>
+                </div>
+            </div>
+
+            <!-- TERRENOS -->
+            <div class="board-details" data-board-id="1-lands" style="margin-top: 1rem; display: none;" id="board-terrenos">
+                <div class="board-header-toggle">
+                    <span><i class="fa-solid fa-chevron-down"></i> Terrenos <span class="badge" id="badge-terrenos">0</span></span>
+                </div>
+                <div class="board-content">
+                    <div id="grid-cmc-terrenos" class="grid-cmc"></div>
+                </div>
+            </div>
+
+            <!-- OUTROS BOARDS -->
+            <div class="boards-secundarios" style="margin-top: 1rem;">
+                <div class="board-details" data-board-id="2">
+                    <div class="board-header-toggle"><span><i class="fa-solid fa-chevron-right"></i> Sideboard <span class="badge" id="badge-sideboard">0</span></span></div>
+                    <div class="board-content hidden" id="conteudo-sideboard"></div>
+                </div>
+                <div class="board-details" data-board-id="3">
+                    <div class="board-header-toggle"><span><i class="fa-solid fa-chevron-right"></i> Maybeboard <span class="badge" id="badge-maybeboard">0</span></span></div>
+                    <div class="board-content hidden" id="conteudo-maybeboard"></div>
+                </div>
+                <div class="board-details" data-board-id="4">
+                    <div class="board-header-toggle"><span><i class="fa-solid fa-chevron-right"></i> Wishboard <span class="badge" id="badge-wishboard">0</span></span></div>
+                    <div class="board-content hidden" id="conteudo-wishboard"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SIDEBAR DIREITA -->
+        <aside class="sidebar-direita">
+            <!-- INDICADORES (TOPO) -->
+            <div class="painel-indicadores">
+                <h3 class="titulo" style="font-size: 1.25rem; margin-bottom: 1rem;">Indicadores</h3>
+                <div class="stat-grid">
+                    <div class="stat-item"><span class="descricao">Total</span><strong id="stat-total">0</strong></div>
+                    <div class="stat-item"><span class="descricao">Criaturas</span><strong id="stat-criaturas">0</strong></div>
+                    <div class="stat-item"><span class="descricao">Não-Criaturas</span><strong id="stat-nao-criaturas">0</strong></div>
+                    <div class="stat-item"><span class="descricao">Terrenos</span><strong id="stat-terrenos">0</strong></div>
+                    <div class="stat-item" style="grid-column: span 2;"><span class="descricao">CMC Médio (sem terrenos)</span><strong id="stat-cmc-medio">0.0</strong></div>
+                </div>
+            </div>
+
+            <!-- VALIDAÇÕES (ABAIXO) -->
+            <div class="painel-validacao" style="margin-top: 2rem;">
+                <h3 class="titulo" style="font-size: 1.25rem;">Validação</h3>
+                <ul id="lista-validacao" style="margin-top: 1rem;">
+                    <li id="val-total"><i class="fa-solid fa-circle-notch"></i> 0 / 100 cartas</li>
+                    <li id="val-identidade"><i class="fa-solid fa-circle-notch"></i> Identidade de cor</li>
+                    <li id="val-copias"><i class="fa-solid fa-circle-notch"></i> Sem cópias repetidas</li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>

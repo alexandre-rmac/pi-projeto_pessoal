@@ -31,6 +31,7 @@ function buscarComandantes(nome) {
           AND t2.descricao = 'Legendary'
           AND c.nome LIKE ?
         ORDER BY c.nome ASC
+        LIMIT 20
     `;
     return database.executar(sql, ["%" + nome + "%"]);
 }
@@ -44,13 +45,24 @@ function buscarPorNomes(nomes) {
 }
 
 // 3. Busca por Nome (com limite dinâmico)
-function buscarPorNome(nome, limite, offset) {
+function buscarPorNome(nome, identidadeDeck, limite, offset) {
     var sql = `
         SELECT id, nome, codigo, cmc, tipo, cores, identidade
-        FROM carta WHERE nome LIKE ?
-        ORDER BY nome ASC LIMIT ? OFFSET ?
+        FROM carta 
+        WHERE nome LIKE ? 
     `;
-    return database.executar(sql, ["%" + nome + "%", limite, offset]);
+    var params = ["%" + nome + "%"];
+
+    if (identidadeDeck && identidadeDeck !== 'C') {
+        var placeholders = identidadeDeck.split('').map(() => 'identidade LIKE ?').join(' OR ');
+        sql += ` AND (identidade = 'C' OR ${placeholders}) `;
+        identidadeDeck.split('').forEach(cor => params.push(`%${cor}%`));
+    }
+
+    sql += ` ORDER BY nome ASC LIMIT ? OFFSET ?`;
+    params.push(limite, offset);
+
+    return database.executar(sql, params);
 }
 
 // 4. Busca Avançada (com filtros SQL + filtro de texto via JSON em memória)
@@ -72,22 +84,20 @@ function buscarAvancada(filtros, limite, offset) {
 
     if (filtros.nome) { where.push("c.nome LIKE ?"); params.push("%" + filtros.nome + "%"); }
     if (filtros.cmc !== undefined) { where.push("c.cmc = ?"); params.push(filtros.cmc); }
-    
-    // Filtro de cores/identidade (verifica se as letras estão contidas na string)
-    if (filtros.cores) { 
+
+    if (filtros.cores) {
         filtros.cores.split(',').forEach(cor => {
-            where.push("c.cores LIKE ?"); 
-            params.push("%" + cor + "%"); 
+            where.push("c.cores LIKE ?");
+            params.push("%" + cor + "%");
         });
     }
     if (filtros.identidade) {
         filtros.identidade.split(',').forEach(cor => {
-            where.push("c.identidade LIKE ?"); 
-            params.push("%" + cor + "%"); 
+            where.push("c.identidade LIKE ?");
+            params.push("%" + cor + "%");
         });
     }
 
-    // Filtro de texto (JSON em memória)
     if (filtros.texto) {
         var map = carregarIndex();
         var uuidsComTexto = [];
@@ -95,8 +105,8 @@ function buscarAvancada(filtros, limite, offset) {
         map.forEach(card => {
             if (card.text && regex.test(card.text)) uuidsComTexto.push(card.uuid);
         });
-        
-        if (uuidsComTexto.length === 0) return Promise.resolve([]); // Nenhum resultado
+
+        if (uuidsComTexto.length === 0) return Promise.resolve([]);
         where.push(`c.codigo IN (${uuidsComTexto.map(() => '?').join(', ')})`);
         params.push(...uuidsComTexto);
     }
@@ -109,7 +119,7 @@ function buscarAvancada(filtros, limite, offset) {
     return database.executar(sql, params);
 }
 
-// 5. Detalhes por UUID (para dashboard)
+// 5. Detalhes por UUID (para dashboard e preview)
 function detalhesPorUuids(uuids) {
     var map = carregarIndex();
     var saida = [];
@@ -117,9 +127,20 @@ function detalhesPorUuids(uuids) {
         var card = map.get(uuid);
         if (card) {
             saida.push({
-                uuid: card.uuid, name: card.name, manaCost: card.manaCost,
-                text: card.text, type: card.type, types: card.types, 
-                subtypes: card.subtypes, supertypes: card.supertypes
+                uuid: card.uuid, 
+                name: card.name, 
+                cmc: card.manaValue || 0, // <-- ADICIONADO AQUI
+                manaCost: card.manaCost,
+                colors: card.colors,
+                colorsId: card.colorId,
+                text: card.text,
+                keywords: card.keywords,
+                type: card.type, 
+                types: card.types,
+                subtypes: card.subtypes, 
+                supertypes: card.supertypes,
+                power: card.power, // <-- ADICIONADO AQUI
+                toughness: card.toughness // <-- ADICIONADO AQUI
             });
         }
     });

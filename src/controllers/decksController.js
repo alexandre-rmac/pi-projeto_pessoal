@@ -77,7 +77,7 @@ function adicionarCarta(req, res) {
     .catch(e => {
       console.error(e);
       if (e.message.includes("Acesso negado")) return res.status(403).json({ erro: e.message });
-      res.status(500).json({ erro: "Erro ao adicionar carta." });
+      res.status(500).json({ erro: "Erro ao adicionar carta. " + e.sqlMessage });
     });
 }
 
@@ -86,10 +86,11 @@ function removerCarta(req, res) {
   var idCarta = req.params.idCarta;
   var idBoard = req.query.idBoard;
   var fkUsuario = req.query.fkUsuario;
+  var quantidade = req.query.quantidade;
 
   if (!idBoard || !fkUsuario) return res.status(400).json({ erro: "idBoard e fkUsuario são obrigatórios na query." });
 
-  decksModel.removerCarta(idDeck, idCarta, idBoard, fkUsuario)
+  decksModel.removerCarta(idDeck, idCarta, idBoard, fkUsuario, quantidade)
     .then(r => {
       if (r.affectedRows === 0) return res.status(403).json({ erro: "Acesso negado ou carta não encontrada." });
       res.json({ mensagem: "Carta removida com sucesso." });
@@ -97,7 +98,20 @@ function removerCarta(req, res) {
     .catch(e => { console.error(e); res.status(500).json({ erro: "Erro ao remover carta." }); });
 }
 
+function detalheCompleto(req, res) {
+    var id = req.params.id;
+    var fkUsuario = req.query.fkUsuario;
+    if (!fkUsuario) return res.status(400).json({ erro: "fkUsuario obrigatório." });
+
+    decksModel.buscarDeckCompleto(id, fkUsuario)
+        .then(r => {
+            if (!r) return res.status(404).json({ erro: "Deck não encontrado ou acesso negado." });
+            res.json(r);
+        })
+        .catch(e => { console.error(e); res.status(500).json({ erro: "Erro ao buscar deck completo." }); });
+}
+
 module.exports = {
   listarPorUsuario, detalhe, cadastrar, atualizar, deletar,
-  listarCartas, adicionarCarta, removerCarta
+  listarCartas, adicionarCarta, removerCarta, detalheCompleto
 };

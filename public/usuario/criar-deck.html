@@ -6,18 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alramac - Criar Novo Deck</title>
 
+    <link rel="icon" href="/assets/icon/favicon2.ico">
+
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/pages/criar-deck.css">
-    <link rel="icon" href="/assets/icon/favicon2.ico">
+    
+    <link rel="stylesheet" href="/css/pages/criarDeck.css">
+    <link rel="stylesheet" href="/css/cardsComponent.css">
+    
+    <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
 
     <script src="/js/navbar.js"></script>
-    <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
+    <script src="/js/fetch/fetchLoad.js" defer></script>
+    <script src="/js/fetch/fetchApi.js" defer></script>
+    <script src="/js/fetch/cardRender.js" defer></script>
+    <script src="/js/criarDeck.js" defer></script>
 </head>
 
 <body>
     <div id="navbar-container"></div>
+
+    <!-- Tela de Carregamento -->
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner"></div>
+    </div>
 
     <section class="criar-deck">
         <div class="criar-deck-titulo-container">
@@ -28,19 +41,20 @@
         <div class="criar-deck-container">
             <div class="criar-deck-form">
                 <div class="form-titulo-container">
-                    <h3 class="form-titulo">Os primeiros detalhes</h3>
-                    <p class="form-descricao">Um nome para sua estratégia. Um comandante para dar a direção.</p>
+                    <h3 class="titulo">Os primeiros detalhes</h3>
+                    <p class="descricao">Um nome para sua estratégia. Um comandante para dar a direção.</p>
                 </div>
-                <div class="form-nome-container">
-                    <p class="form-nome">Nome do Deck</p>
-                    <input type="text" class="input-nome" placeholder="[Nome do Deck]">
-                    <p class="form-nome-descricao">Você pode alterar o nome depois.</p>
+                <div class="form-container">
+                    <p class="form-titulo">Nome do Deck</p>
+                    <input type="text" id="ipt_nome_deck" class="input" placeholder="[Nome do Deck]">
+                    <p class="form-descricao">Você pode alterar o nome depois.</p>
                 </div>
-                <div class="form-commander-container">
-                    <p class="form-commander">Commander</p>
-                    <input type="text" class="input-commander" placeholder="Buscar Commander por nome">
-                    <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
-                    <p class="form-commander-descricao">Busque por uma carta elegível para ser seu comandante.</p>
+                <div class="form-container">
+                    <p class="form-titulo">Commander</p>
+                    <div class="search-container">
+                        <input type="text" id="ipt_search_commander" class="input" placeholder="Digite o nome do comandante...">
+                        <div id="suggestions" class="suggestions"></div>
+                    </div>
                 </div>
                 <div class="form-selecionado-container">
                     <div class="selecionado-card">
@@ -56,9 +70,12 @@
             </div>
             <div class="previa-container">
                 <h3 class="previa-titulo">Prévia do Commander</h3>
-                <div class="previa-exibir-carta" id="previa_carta"></div>
+                <div id="card-preview" class="card-container">
+                    <p style="color: #777; font-style: italic;">A carta aparecerá aqui</p>
+                </div>
+                <!-- <div class="previa-exibir-carta" id="previa_carta"></div> -->
                 <div class="criar-deck-botoes">
-                    <button id="criar_deck"><i class="fa-solid fa-plus"></i> Criar Deck</button>
+                    <button id="btn_criar"><i class="fa-solid fa-plus"></i> Criar Deck</button>
                     <p class="criar-descricao">Após criar o deck, você continua em Editar Deck</p>
                     <a class="criar-cancelar" href="/usuario/perfil.html">Cancelar e voltar ao Perfil</a>
                 </div>

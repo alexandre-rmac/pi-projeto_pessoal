@@ -39,15 +39,13 @@ function deletarDeck(id, fkUsuario) {
 }
 
 function adicionarCarta(idDeck, idCarta, idBoard, quantidade, fkUsuario) {
-    // 1. Verifica se o deck pertence ao usuário antes de inserir
     var sqlCheck = "SELECT id FROM deck WHERE id = ? AND fk_usuario = ?";
     
     return database.executar(sqlCheck, [idDeck, fkUsuario]).then(function(resultado) {
         if (resultado.length === 0) {
-            return Promise.reject(new Error("Acesso negado: deck não encontrado ou não pertence ao usuário."));
+            return Promise.reject(new Error("Acesso negado: deck não encontrado."));
         }
         
-        // 2. Se pertence, faz o UPSERT da carta
         var sql = `
             INSERT INTO deck_carta (fk_deck, fk_carta, fk_board, quantidade)
             VALUES (?, ?, ?, ?)
@@ -57,17 +55,50 @@ function adicionarCarta(idDeck, idCarta, idBoard, quantidade, fkUsuario) {
     });
 }
 
-function removerCarta(idDeck, idCarta, idBoard, fkUsuario) {
-    var sql = `
-        DELETE dc FROM deck_carta dc
-        INNER JOIN deck d ON d.id = dc.fk_deck
+function removerCarta(idDeck, idCarta, idBoard, fkUsuario, quantidade) {
+    var qtdRemover = parseInt(quantidade) || 1;
+    var sqlCheck = `
+        SELECT dc.quantidade FROM deck_carta dc 
+        INNER JOIN deck d ON d.id = dc.fk_deck 
         WHERE dc.fk_deck = ? AND dc.fk_carta = ? AND dc.fk_board = ? AND d.fk_usuario = ?
     `;
-    return database.executar(sql, [idDeck, idCarta, idBoard, fkUsuario]);
+    
+    return database.executar(sqlCheck, [idDeck, idCarta, idBoard, fkUsuario]).then(res => {
+        if (res.length === 0) return Promise.reject(new Error("Carta não encontrada."));
+        
+        const qtdAtual = res[0].quantidade;
+        
+        if (qtdAtual > qtdRemover) {
+            var sqlUpdate = "UPDATE deck_carta SET quantidade = quantidade - ? WHERE fk_deck = ? AND fk_carta = ? AND fk_board = ?";
+            return database.executar(sqlUpdate, [qtdRemover, idDeck, idCarta, idBoard]);
+        } else {
+            var sqlDelete = "DELETE FROM deck_carta WHERE fk_deck = ? AND fk_carta = ? AND fk_board = ?";
+            return database.executar(sqlDelete, [idDeck, idCarta, idBoard]);
+        }
+    });
+}
+
+function buscarDeckCompleto(idDeck, fkUsuario) {
+    var sqlDeck = "SELECT id, nome, commander, identidade FROM deck WHERE id = ? AND fk_usuario = ?";
+    var sqlCartas = `
+        SELECT dc.fk_carta AS idCarta, c.nome, c.codigo AS uuid, c.cmc, c.tipo, c.cores, c.identidade,
+               dc.quantidade, b.id AS idBoard, b.descricao AS nomeBoard
+        FROM deck_carta dc
+        INNER JOIN carta c ON c.id = dc.fk_carta
+        INNER JOIN board b ON b.id = dc.fk_board
+        WHERE dc.fk_deck = ?
+    `;
+
+    return database.executar(sqlDeck, [idDeck, fkUsuario]).then(function (decks) {
+        if (!decks || decks.length === 0) return null;
+        return database.executar(sqlCartas, [idDeck]).then(function (cartas) {
+            return { deck: decks[0], cartas: cartas };
+        });
+    });
 }
 
 module.exports = {
     buscarDecksPorUsuario, buscarPorId, cadastrarDecks,
     atualizarDeck, deletarDeck, listarCartasDoDeck,
-    adicionarCarta, removerCarta
+    adicionarCarta, removerCarta, buscarDeckCompleto
 };

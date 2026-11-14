@@ -1,0 +1,264 @@
+.container {
+    display: grid;
+    grid-template-columns: 320px 1fr 300px;
+    gap: 2rem;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+aside,
+.deck-area {
+    background: var(--fundo-alt);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: var(--fundo);
+    border: 1px solid var(--borda);
+    border-radius: 4px;
+    padding: 0 1rem;
+    position: relative;
+}
+
+.search-box i {
+    color: var(--texto-suave);
+}
+
+.search-box input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--texto);
+    padding: 1rem 0.5rem;
+    font-family: var(--fonte-corpo);
+    outline: none;
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--fundo-alt);
+    border: 1px solid var(--borda);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--borda);
+}
+
+.suggestion-item:hover {
+    background: var(--fundo-destaque);
+    color: var(--destaque);
+}
+
+#preview-card-render {
+    transform: scale(0.82);
+    transform-origin: top center;
+    margin-bottom: -80px;
+}
+
+.preview-acoes select,
+.preview-acoes input {
+    background: var(--fundo);
+    border: 1px solid var(--borda);
+    color: var(--texto);
+    padding: 0.4rem;
+    border-radius: 4px;
+}
+
+.btn-excluir {
+    color: var(--destaque-vermelho) !important;
+    border-color: var(--destaque-vermelho) !important;
+}
+
+.btn-excluir:hover {
+    background: var(--destaque-vermelho) !important;
+    color: var(--fundo) !important;
+    box-shadow: none !important;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.stat-item {
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: 4px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.stat-item strong {
+    display: block;
+    font-size: 1.5rem;
+    color: var(--destaque);
+    font-family: var(--fonte-titulo);
+}
+
+.comandante-box {
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: 150ms;
+}
+
+.comandante-box:hover {
+    border-color: var(--destaque);
+}
+
+.comandante-icon {
+    width: 50px;
+    height: 60px;
+    background: var(--fundo-destaque);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    color: var(--destaque);
+    font-size: 1.5rem;
+}
+
+.grid-cmc {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    min-height: 100px;
+    flex-wrap: wrap;
+}
+
+.cmc-column {
+    display: flex;
+    flex-direction: column;
+    min-width: 140px;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.card-visual-wrapper {
+    width: 140px;
+    height: 52px;
+    overflow: hidden;
+    position: relative;
+    margin-top: -15px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.card-visual-wrapper:first-child {
+    margin-top: 0;
+}
+
+.card-visual-wrapper:last-child {
+    height: 215px;
+    overflow: visible;
+    z-index: 10;
+    margin-bottom: 10px;
+}
+
+.card-visual-wrapper .mtg-card {
+    transform: scale(0.41);
+    transform-origin: top left;
+    pointer-events: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
+}
+
+.board-details {
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+}
+
+.board-header-toggle {
+    padding: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-family: var(--fonte-corpo);
+}
+
+.board-header-toggle:hover {
+    background: var(--fundo-destaque);
+}
+
+.board-content {
+    padding: 1rem;
+    border-top: 1px solid var(--borda);
+    overflow: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.badge {
+    background: var(--fundo-destaque);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: var(--destaque);
+}
+
+.board-vazio {
+    text-align: center;
+    color: var(--texto-suave);
+    font-style: italic;
+    padding: 2rem;
+}
+
+#lista-validacao {
+    list-style: none;
+    padding: 0;
+}
+
+#lista-validacao li {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--texto-suave);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#lista-validacao li.ok {
+    color: var(--destaque-verde);
+}
+
+#lista-validacao li.erro {
+    color: var(--destaque-vermelho);
+}
+
+#card-hover-modal {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+#card-hover-modal.hidden {
+    display: none;
+}

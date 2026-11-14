@@ -1,8 +1,8 @@
-var cartasModel = require("../models/cartasModel");
+var cardsModel = require("../models/cardsModel");
 
 function comandantes(req, res) {
     var nome = req.query.nome || "";
-    cartasModel.buscarComandantes(nome)
+    cardsModel.buscarComandantes(nome)
         .then(r => res.json(r))
         .catch(e => { console.error(e); res.status(500).json({ erro: "Erro ao buscar comandantes." }); });
 }
@@ -12,7 +12,7 @@ function lote(req, res) {
     if (!Array.isArray(nomes) || nomes.length === 0) {
         return res.status(400).json({ erro: "Envie um array 'nomes'." });
     }
-    cartasModel.buscarPorNomes(nomes)
+    cardsModel.buscarPorNomes(nomes)
         .then(encontradas => {
             var nomesEncontrados = encontradas.map(c => c.nome.toLowerCase());
             var naoEncontradas = nomes.filter(n => !nomesEncontrados.includes(n.toLowerCase()));
@@ -23,13 +23,14 @@ function lote(req, res) {
 
 function buscar(req, res) {
     var nome = req.query.nome || "";
+    var identidadeDeck = req.query.identidade
     var limite = parseInt(req.query.limite) || 20;
     if (![20, 50, 100].includes(limite)) limite = 20; // Força os limites permitidos
     var offset = parseInt(req.query.offset) || 0;
 
     if (nome.length < 2) return res.status(400).json({ erro: "Informe ao menos 2 caracteres." });
 
-    cartasModel.buscarPorNome(nome, limite, offset)
+    cardsModel.buscarPorNome(nome, identidadeDeck, limite, offset)
         .then(r => res.json(r))
         .catch(e => { console.error(e); res.status(500).json({ erro: "Erro na busca." }); });
 }
@@ -45,7 +46,7 @@ function avancada(req, res) {
         tipo: req.query.tipo, texto: req.query.texto
     };
 
-    cartasModel.buscarAvancada(filtros, limite, offset)
+    cardsModel.buscarAvancada(filtros, limite, offset)
         .then(r => res.json(r))
         .catch(e => { console.error(e); res.status(500).json({ erro: "Erro na busca avançada." }); });
 }
@@ -53,7 +54,7 @@ function avancada(req, res) {
 function detalhes(req, res) {
     var uuids = req.body.uuids;
     if (!Array.isArray(uuids) || uuids.length === 0) return res.status(400).json({ erro: "Envie 'uuids'." });
-    cartasModel.detalhesPorUuids(uuids)
+    cardsModel.detalhesPorUuids(uuids)
         .then(r => res.json(r))
         .catch(e => { console.error(e); res.status(500).json({ erro: "Erro nos detalhes." }); });
 }
