@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-
-const INPUT_FILE = path.join(__dirname, '..', 'data', 'AtomicCards.json');
+const ac_path = '../../Forja/mtgapi/data/'
+const INPUT_FILE = path.join(__dirname, ac_path, 'AtomicCards.json');
+console.log(__dirname, INPUT_FILE)
 const OUTPUT_FILE = path.join(__dirname, '..', 'data', 'cards-index.json');
 
 if (!fs.existsSync(INPUT_FILE)) {
