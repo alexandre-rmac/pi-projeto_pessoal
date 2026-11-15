@@ -21,7 +21,7 @@ function carregarIndex() {
 // 1. Comandantes (Lendários + Criatura)
 function buscarComandantes(nome) {
     var sql = `
-        SELECT c.id, c.nome, c.codigo, c.cmc, c.tipo, c.cores, c.identidade
+        SELECT c.id, c.nome, c.codigo, c.cmc, c.cores, c.identidade
         FROM carta c
         INNER JOIN tipo_carta tc1 ON c.id = tc1.fk_carta
         INNER JOIN tipo t1 ON tc1.fk_tipo = t1.id
@@ -40,14 +40,14 @@ function buscarComandantes(nome) {
 function buscarPorNomes(nomes) {
     if (!nomes || nomes.length === 0) return Promise.resolve([]);
     var placeholders = nomes.map(() => '?').join(', ');
-    var sql = `SELECT id, nome, codigo, cmc, tipo, cores, identidade FROM carta WHERE nome IN (${placeholders})`;
+    var sql = `SELECT id, nome, codigo, cmc, cores, identidade FROM carta WHERE nome IN (${placeholders})`;
     return database.executar(sql, nomes);
 }
 
 // 3. Busca por Nome (com limite dinâmico)
 function buscarPorNome(nome, identidadeDeck, limite, offset) {
     var sql = `
-        SELECT id, nome, codigo, cmc, tipo, cores, identidade
+        SELECT id, nome, codigo, cmc, cores, identidade
         FROM carta 
         WHERE nome LIKE ? 
     `;
@@ -68,7 +68,7 @@ function buscarPorNome(nome, identidadeDeck, limite, offset) {
 // 4. Busca Avançada (com filtros SQL + filtro de texto via JSON em memória)
 function buscarAvancada(filtros, limite, offset) {
     var sql = `
-        SELECT DISTINCT c.id, c.nome, c.codigo, c.cmc, c.tipo, c.cores, c.identidade
+        SELECT DISTINCT c.id, c.nome, c.codigo, c.cmc, c.cores, c.identidade
         FROM carta c
     `;
     var joins = [];

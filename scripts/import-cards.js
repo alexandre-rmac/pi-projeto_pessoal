@@ -56,7 +56,6 @@ if (!fs.existsSync(INDEX_FILE)) {
         for (let i = 0; i < cartas.length; i += BATCH_SIZE) {
             const batch = cartas.slice(i, i + BATCH_SIZE);
             
-            // Inicia a transação POR LOTE (evita travar o banco)
             await conn.beginTransaction();
 
             try {
@@ -67,21 +66,22 @@ if (!fs.existsSync(INDEX_FILE)) {
                 batch.forEach(c => {
                     const cor = (c.colors && c.colors.length) ? c.colors.join('') : 'C';
                     const identidade = (c.colorId && c.colorId.length) ? c.colorId.join('') : 'C';
-                    const tipoConcatenado = (c.types && c.types.length) ? c.types.join(', ') : '';
-                    const cmc = c.manaValue || 0; 
+                    const cmc = Number(c.manaValue) || 0;
+                    const edhRank = Number(c.edhRank) || 0;
 
-                    valuesCarta.push(c.name, c.uuid, cmc, tipoConcatenado, cor, identidade);
+                    valuesCarta.push(c.name, c.uuid, cmc, cor, identidade, edhRank);
                 });
 
                 await conn.query(
-                    `INSERT INTO carta (nome, codigo, cmc, tipo, cores, identidade)
+                    `INSERT INTO carta (nome, codigo, cmc, cores, identidade, edhRank)
                      VALUES ${placeholdersCarta}
                      ON DUPLICATE KEY UPDATE
                        nome = VALUES(nome),
                        cmc = VALUES(cmc),
-                       tipo = VALUES(tipo),
                        cores = VALUES(cores),
-                       identidade = VALUES(identidade)`,
+                       identidade = VALUES(identidade),
+                       edhRank = VALUES(edhRank)`,
+
                     valuesCarta
                 );
 

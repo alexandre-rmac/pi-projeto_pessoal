@@ -24,9 +24,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 function normalizarCarta(c) {
     return {
         ...c,
-        cmc: c.cmc !== undefined ? c.cmc : (c.manaValue || 0), // <-- PROTEÇÃO
+        cmc: c.cmc !== undefined ? c.cmc : (c.manaValue || 0),
         name: c.nome || c.name,
-        type: c.tipo || c.type,
         colors: c.cores ? c.cores.split('') : (c.colors || []),
         colorsId: c.identidade ? c.identidade.split('') : (c.colorsId || []),
         manaCost: c.manaCost || '',
@@ -56,7 +55,7 @@ async function carregarDeckInicial() {
                     c.keywords = json.keywords;
                     c.power = json.power;
                     c.toughness = json.toughness;
-                    if (c.cmc === undefined) c.cmc = json.cmc; // <-- PROTEÇÃO
+                    if (c.cmc === undefined) c.cmc = json.cmc;
                 }
             });
         }
