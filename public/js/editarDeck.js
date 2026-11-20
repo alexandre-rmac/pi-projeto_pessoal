@@ -35,9 +35,7 @@ function prepararCartas(cartas) {
 async function carregarDeckInicial() {
     try {
         atualizarStatus('salvando');
-        console.log(idDeck, fkUsuario)
         const data = await api.buscarDeckCompleto(idDeck, fkUsuario);
-        console.log(data)
         deckData = {
             deck: data.deck,
             cartas: prepararCartas(data.cartas)
@@ -103,7 +101,7 @@ function renderizarAbaAtiva(cartas, comandante) {
         }
     });
 
-    if (abaAtiva === 1 && comandante) {
+    if (abaAtiva === 1 && comandante && cidCarta == comandante.idCarta) {
         const colComandante = document.createElement('div');
         colComandante.className = 'cmc-column commander-column';
         colComandante.innerHTML = `<span class="cmc-title"><i class="fa-solid fa-crown"></i> Comandante</span>`;

@@ -95,7 +95,7 @@ function buscarDeckCompleto(idDeck, fkUsuario) {
         WHERE dc.fk_deck = ?
         `;
 
-        console.log(idDeck)
+    
     return database.executar(sqlDeck, [idDeck, fkUsuario]).then(function (decks) {
         if (!decks || decks.length === 0) return null;
 
