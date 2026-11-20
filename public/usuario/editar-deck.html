@@ -12,18 +12,25 @@
     <link rel="stylesheet" href="/css/cardsComponent.css">
     <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
     <script src="/js/navbar.js" defer></script>
+    <script src="/js/components/modal.js" defer></script>
+    <script src="/js/components/importCsv.js" defer></script>
     <script src="/js/fetch/fetchLoad.js" defer></script>
     <script src="/js/fetch/fetchApi.js" defer></script>
     <script src="/js/fetch/cardRender.js" defer></script>
     <script src="/js/editarDeck.js" defer></script>
-</head>
 <body>
     <div id="navbar-container"></div>
     <div id="loading-overlay" class="hidden"><div class="spinner"></div></div>
-    <div id="card-hover-modal" class="hidden"></div>
+    
+    <div id="modal-alerta" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="titulo" id="modal-titulo" style="margin-bottom: 1rem;">Aviso</h3>
+            <div id="modal-mensagem" style="margin-bottom: 1.5rem; max-height: 200px; overflow-y: auto; font-size: 0.9rem;"></div>
+            <button class="btn" style="width: 100%;" onclick="document.getElementById('modal-alerta').classList.add('hidden')">Fechar</button>
+        </div>
+    </div>
 
     <main class="container">
-        <!-- SIDEBAR ESQUERDA -->
         <aside class="sidebar-esquerda" style="display: flex; flex-direction: column;">
             <h2 class="titulo" style="font-size: 1.5rem; margin-bottom: 1rem;">Encontre sua próxima carta</h2>
             
@@ -33,11 +40,8 @@
                 <div id="suggestions" class="suggestions"></div>
             </div>
 
-            <!-- ÁREA DE EXIBIÇÃO (PREVIEW) -->
             <div id="preview-carta" class="preview-container hidden" style="margin-top: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                 <div id="preview-card-render"></div>
-                
-                <!-- Controles de Ação no Preview -->
                 <div id="preview-acoes" class="preview-acoes hidden" style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem; padding: 0 1rem;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <label for="input-qtd" style="font-size: 0.85rem; color: var(--texto-suave);">Qtd:</label>
@@ -56,9 +60,8 @@
                 </div>
             </div>
 
-            <div style="flex-grow: 1;"></div> <!-- Empurra os botões para baixo -->
+            <div style="flex-grow: 1;"></div>
 
-            <!-- BOTÕES INFERIORES -->
             <button class="btn" style="width: 100%; margin-top: 0.5rem;">Pesquisa Avançada</button>
             <div class="csv-import" style="margin-top: 1rem;">
                 <label for="csv-file" class="btn-outline" style="width: 100%;">
@@ -68,7 +71,6 @@
             </div>
         </aside>
 
-        <!-- ÁREA CENTRAL DO DECK -->
         <section class="deck-area">
             <div class="deck-header">
                 <div>
@@ -78,50 +80,21 @@
                 <div class="status-salvamento" id="status-salvamento"><i class="fa-solid fa-check"></i> Salvo</div>
             </div>
 
-            <div id="area-comandante" class="comandante-box"></div>
-
-            <!-- ACCORDION DA MAINBOARD -->
-            <div class="board-details" data-board-id="1" style="margin-top: 1.5rem;">
-                <div class="board-header-toggle" id="toggle-mainboard">
-                    <span><i class="fa-solid fa-chevron-down"></i> Mainboard <span class="badge" id="badge-mainboard">0</span></span>
-                </div>
-                
-                <div class="board-content" id="conteudo-mainboard">
-                    <!-- Grid -->
-                    <div id="grid-cmc-mainboard" class="grid-cmc"></div>
-                </div>
+            <!-- NAVEGAÇÃO DE ABAS (TABS) -->
+            <div class="board-tabs">
+                <button class="tab-btn active" data-board="1">Mainboard <span class="badge" id="badge-1">0</span></button>
+                <button class="tab-btn" data-board="2">Sideboard <span class="badge" id="badge-2">0</span></button>
+                <button class="tab-btn" data-board="3">Maybeboard <span class="badge" id="badge-3">0</span></button>
+                <button class="tab-btn" data-board="4">Wishboard <span class="badge" id="badge-4">0</span></button>
             </div>
 
-            <!-- TERRENOS -->
-            <div class="board-details" data-board-id="1-lands" style="margin-top: 1rem; display: none;" id="board-terrenos">
-                <div class="board-header-toggle">
-                    <span><i class="fa-solid fa-chevron-down"></i> Terrenos <span class="badge" id="badge-terrenos">0</span></span>
-                </div>
-                <div class="board-content">
-                    <div id="grid-cmc-terrenos" class="grid-cmc"></div>
-                </div>
-            </div>
-
-            <!-- OUTROS BOARDS -->
-            <div class="boards-secundarios" style="margin-top: 1rem;">
-                <div class="board-details" data-board-id="2">
-                    <div class="board-header-toggle"><span><i class="fa-solid fa-chevron-right"></i> Sideboard <span class="badge" id="badge-sideboard">0</span></span></div>
-                    <div class="board-content hidden" id="conteudo-sideboard"></div>
-                </div>
-                <div class="board-details" data-board-id="3">
-                    <div class="board-header-toggle"><span><i class="fa-solid fa-chevron-right"></i> Maybeboard <span class="badge" id="badge-maybeboard">0</span></span></div>
-                    <div class="board-content hidden" id="conteudo-maybeboard"></div>
-                </div>
-                <div class="board-details" data-board-id="4">
-                    <div class="board-header-toggle"><span><i class="fa-solid fa-chevron-right"></i> Wishboard <span class="badge" id="badge-wishboard">0</span></span></div>
-                    <div class="board-content hidden" id="conteudo-wishboard"></div>
-                </div>
+            <!-- ÁREA DO GRID -->
+            <div class="board-content" id="board-content-area">
+                <div id="grid-cmc" class="grid-cmc"></div>
             </div>
         </section>
 
-        <!-- SIDEBAR DIREITA -->
         <aside class="sidebar-direita">
-            <!-- INDICADORES (TOPO) -->
             <div class="painel-indicadores">
                 <h3 class="titulo" style="font-size: 1.25rem; margin-bottom: 1rem;">Indicadores</h3>
                 <div class="stat-grid">
@@ -133,7 +106,6 @@
                 </div>
             </div>
 
-            <!-- VALIDAÇÕES (ABAIXO) -->
             <div class="painel-validacao" style="margin-top: 2rem;">
                 <h3 class="titulo" style="font-size: 1.25rem;">Validação</h3>
                 <ul id="lista-validacao" style="margin-top: 1rem;">

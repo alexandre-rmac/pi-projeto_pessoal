@@ -28,7 +28,6 @@ if (!fs.existsSync(INDEX_FILE)) {
         port: Number(process.env.DB_PORT)
     });
 
-
     await conn.beginTransaction();
     console.log('Transação iniciada.');
 
@@ -52,36 +51,41 @@ if (!fs.existsSync(INDEX_FILE)) {
         const tipoMap = new Map();
         tiposDb.forEach(t => tipoMap.set(t.descricao, t.id));
 
-        console.log('Importando cartas em lotes...');        
+        console.log('Importando cartas em lotes...');
         for (let i = 0; i < cartas.length; i += BATCH_SIZE) {
             const batch = cartas.slice(i, i + BATCH_SIZE);
-            
+
             await conn.beginTransaction();
 
             try {
                 // 1. UPSERT na tabela `carta`
-                const placeholdersCarta = batch.map(() => '(?, ?, ?, ?, ?, ?)').join(', ');
+                const placeholdersCarta = batch.map(() => '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').join(', ');
                 const valuesCarta = [];
-                
+
                 batch.forEach(c => {
                     const cor = (c.colors && c.colors.length) ? c.colors.join('') : 'C';
                     const identidade = (c.colorId && c.colorId.length) ? c.colorId.join('') : 'C';
-                    const cmc = Number(c.manaValue) || 0;
-                    const edhRank = Number(c.edhRank) || 0;
 
-                    valuesCarta.push(c.name, c.uuid, cmc, cor, identidade, edhRank);
+                    valuesCarta.push(
+                        c.name, c.uuid, c.manaValue || 0, cor, identidade, c.edhRank || 0,
+                        c.manaCost || '', c.text || '', c.power || '', c.toughness || ''
+                    );
                 });
 
                 await conn.query(
-                    `INSERT INTO carta (nome, codigo, cmc, cores, identidade, edhRank)
+                    `INSERT INTO carta (nome, codigo, cmc, cores, identidade, edhRank, custo_mana, texto, poder, resistencia)
                      VALUES ${placeholdersCarta}
                      ON DUPLICATE KEY UPDATE
-                       nome = VALUES(nome),
-                       cmc = VALUES(cmc),
-                       cores = VALUES(cores),
+                       nome = VALUES(nome), 
+                       codigo = VALUES(codigo),
+                       cmc = VALUES(cmc), 
+                       cores = VALUES(cores), 
                        identidade = VALUES(identidade),
-                       edhRank = VALUES(edhRank)`,
-
+                       edhRank = VALUES(edhRank), 
+                       custo_mana = VALUES(custo_mana), 
+                       texto = VALUES(texto),
+                       poder = VALUES(poder), 
+                       resistencia = VALUES(resistencia)`,
                     valuesCarta
                 );
 
@@ -92,7 +96,7 @@ if (!fs.existsSync(INDEX_FILE)) {
                     `SELECT id, codigo FROM carta WHERE codigo IN (${placeholdersSelect})`,
                     codigosBatch
                 );
-                
+
                 const cartaMap = new Map();
                 cartasDb.forEach(c => cartaMap.set(c.codigo, c.id));
 
@@ -118,7 +122,7 @@ if (!fs.existsSync(INDEX_FILE)) {
                 // 4. Inserir associações na tabela `tipo_carta`
                 if (associacoes.length > 0) {
                     const placeholdersTipoCarta = associacoes.map(() => '(?, ?)').join(', ');
-                    
+
                     // Constrói o array plano de valores de forma segura
                     const valuesTipoCarta = [];
                     associacoes.forEach(par => {
@@ -133,10 +137,10 @@ if (!fs.existsSync(INDEX_FILE)) {
 
                 // Confirma este lote no banco
                 await conn.commit();
-                
+
                 const processadas = Math.min(i + BATCH_SIZE, cartas.length);
                 process.stdout.write(`\rProcessadas ${processadas}/${cartas.length}`);
-                
+
             } catch (errLote) {
                 await conn.rollback();
                 console.error(`\nErro no lote ${i}. Rollback deste lote efetuado.`);

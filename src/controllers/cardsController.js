@@ -9,12 +9,11 @@ function comandantes(req, res) {
 
 function lote(req, res) {
     var nomes = req.body.nomes;
-    if (!Array.isArray(nomes) || nomes.length === 0) {
-        return res.status(400).json({ erro: "Envie um array 'nomes'." });
-    }
+    if (!Array.isArray(nomes) || nomes.length === 0) return res.status(400).json({ erro: "Envie um array 'nomes'." });
+
     cardsModel.buscarPorNomes(nomes)
         .then(encontradas => {
-            var nomesEncontrados = encontradas.map(c => c.nome.toLowerCase());
+            var nomesEncontrados = encontradas.map(c => c.name.toLowerCase());
             var naoEncontradas = nomes.filter(n => !nomesEncontrados.includes(n.toLowerCase()));
             res.json({ encontradas, naoEncontradas });
         })
@@ -23,9 +22,9 @@ function lote(req, res) {
 
 function buscar(req, res) {
     var nome = req.query.nome || "";
-    var identidadeDeck = req.query.identidade
+    var identidadeDeck = req.query.identidade;
     var limite = parseInt(req.query.limite) || 20;
-    if (![20, 50, 100].includes(limite)) limite = 20; // Força os limites permitidos
+    if (![20, 50, 100].includes(limite)) limite = 20;
     var offset = parseInt(req.query.offset) || 0;
 
     if (nome.length < 2) return res.status(400).json({ erro: "Informe ao menos 2 caracteres." });
@@ -51,12 +50,4 @@ function avancada(req, res) {
         .catch(e => { console.error(e); res.status(500).json({ erro: "Erro na busca avançada." }); });
 }
 
-function detalhes(req, res) {
-    var uuids = req.body.uuids;
-    if (!Array.isArray(uuids) || uuids.length === 0) return res.status(400).json({ erro: "Envie 'uuids'." });
-    cardsModel.detalhesPorUuids(uuids)
-        .then(r => res.json(r))
-        .catch(e => { console.error(e); res.status(500).json({ erro: "Erro nos detalhes." }); });
-}
-
-module.exports = { comandantes, lote, buscar, avancada, detalhes };
+module.exports = { comandantes, lote, buscar, avancada };

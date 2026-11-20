@@ -37,7 +37,6 @@ for (const [key, cardList] of Object.entries(cardsMap)) {
     }
     const rank = Number(card.edhrecRank * card.edhrecSaltiness)
     const edhRank =  rank > 0 ? rank : 0
-    console.log(edhRank)
     index.push({
         name: card.name,
         uuid,

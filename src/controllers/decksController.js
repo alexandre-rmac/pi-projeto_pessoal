@@ -54,7 +54,7 @@ function atualizar(req, res) {
 
 function deletar(req, res) {
   var id = req.params.id;
-  var fkUsuario = req.query.fkUsuario; // Passado via query string no DELETE
+  var fkUsuario = req.query.fkUsuario;
   if (!fkUsuario) return res.status(400).json({ erro: "fkUsuario obrigatório." });
 
   decksModel.deletarDeck(id, fkUsuario)
@@ -111,7 +111,20 @@ function detalheCompleto(req, res) {
         .catch(e => { console.error(e); res.status(500).json({ erro: "Erro ao buscar deck completo." }); });
 }
 
+function adicionarCartasLote(req, res) {
+    var idDeck = req.params.id;
+    var { cartas, idBoard, fkUsuario } = req.body;
+    
+    if (!Array.isArray(cartas) || cartas.length === 0 || !idBoard || !fkUsuario) {
+        return res.status(400).json({ erro: "cartas, idBoard e fkUsuario são obrigatórios." });
+    }
+
+    decksModel.adicionarCartasLote(idDeck, cartas, idBoard, fkUsuario)
+        .then(r => res.json({ mensagem: "Cartas importadas com sucesso.", result: r }))
+        .catch(e => { console.error(e); res.status(500).json({ erro: "Erro ao importar lote." }); });
+}
+
 module.exports = {
   listarPorUsuario, detalhe, cadastrar, atualizar, deletar,
-  listarCartas, adicionarCarta, removerCarta, detalheCompleto
+  listarCartas, adicionarCarta, removerCarta, detalheCompleto, adicionarCartasLote
 };

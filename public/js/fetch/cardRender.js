@@ -145,13 +145,13 @@ function renderizarCarta(card, idContainerOuElemento) {
         return;
     }
 
-    const { colorClass, inlineStyle } = getColorInfo(card.colors || card.colorsId);
+    const { colorClass, inlineStyle } = getColorInfo(card.colorsStr);
     const manaHtml = renderManaCost(card.manaCost);
     const textHtml = renderCardText(card.text || '', card.keywords);
     const ptHtml = (card.power && card.toughness) ? `<div class="card-pt">${card.power}/${card.toughness}</div>` : '';
     
 
-    const colorPieHtml = renderColorPie(card.colorsId || []);
+    const colorPieHtml = renderColorPie(card.identidade || []);
 
     let finalHtml = textHtml.replaceAll('\n', '<br>').replace(/<br>\s*<span class="keyword-highlight">/g, '<br><span class="keyword-highlight">');
 

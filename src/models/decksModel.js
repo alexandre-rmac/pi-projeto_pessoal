@@ -40,12 +40,12 @@ function deletarDeck(id, fkUsuario) {
 
 function adicionarCarta(idDeck, idCarta, idBoard, quantidade, fkUsuario) {
     var sqlCheck = "SELECT id FROM deck WHERE id = ? AND fk_usuario = ?";
-    
-    return database.executar(sqlCheck, [idDeck, fkUsuario]).then(function(resultado) {
+
+    return database.executar(sqlCheck, [idDeck, fkUsuario]).then(function (resultado) {
         if (resultado.length === 0) {
             return Promise.reject(new Error("Acesso negado: deck não encontrado."));
         }
-        
+
         var sql = `
             INSERT INTO deck_carta (fk_deck, fk_carta, fk_board, quantidade)
             VALUES (?, ?, ?, ?)
@@ -62,12 +62,12 @@ function removerCarta(idDeck, idCarta, idBoard, fkUsuario, quantidade) {
         INNER JOIN deck d ON d.id = dc.fk_deck 
         WHERE dc.fk_deck = ? AND dc.fk_carta = ? AND dc.fk_board = ? AND d.fk_usuario = ?
     `;
-    
+
     return database.executar(sqlCheck, [idDeck, idCarta, idBoard, fkUsuario]).then(res => {
         if (res.length === 0) return Promise.reject(new Error("Carta não encontrada."));
-        
+
         const qtdAtual = res[0].quantidade;
-        
+
         if (qtdAtual > qtdRemover) {
             var sqlUpdate = "UPDATE deck_carta SET quantidade = quantidade - ? WHERE fk_deck = ? AND fk_carta = ? AND fk_board = ?";
             return database.executar(sqlUpdate, [qtdRemover, idDeck, idCarta, idBoard]);
@@ -81,24 +81,56 @@ function removerCarta(idDeck, idCarta, idBoard, fkUsuario, quantidade) {
 function buscarDeckCompleto(idDeck, fkUsuario) {
     var sqlDeck = "SELECT id, nome, commander, identidade FROM deck WHERE id = ? AND fk_usuario = ?";
     var sqlCartas = `
-        SELECT dc.fk_carta AS idCarta, c.nome, c.codigo AS uuid, c.cmc, c.tipo, c.cores, c.identidade,
+        SELECT dc.fk_carta AS idCarta, 
+               c.nome AS name, c.codigo AS uuid, c.cmc, c.cores AS colorsStr, c.identidade,
+               c.custo_mana AS manaCost, c.texto AS text, c.poder AS power, c.resistencia AS toughness,
+               (SELECT GROUP_CONCAT(t.descricao SEPARATOR ' ') 
+                FROM tipo_carta tc 
+                INNER JOIN tipo t ON t.id = tc.fk_tipo 
+                WHERE tc.fk_carta = c.id) AS type,
                dc.quantidade, b.id AS idBoard, b.descricao AS nomeBoard
         FROM deck_carta dc
         INNER JOIN carta c ON c.id = dc.fk_carta
         INNER JOIN board b ON b.id = dc.fk_board
         WHERE dc.fk_deck = ?
-    `;
+        `;
 
+        console.log(idDeck)
     return database.executar(sqlDeck, [idDeck, fkUsuario]).then(function (decks) {
         if (!decks || decks.length === 0) return null;
+
         return database.executar(sqlCartas, [idDeck]).then(function (cartas) {
             return { deck: decks[0], cartas: cartas };
         });
     });
 }
 
+function adicionarCartasLote(idDeck, cartas, idBoard, fkUsuario) {
+    var sqlCheck = "SELECT id FROM deck WHERE id = ? AND fk_usuario = ?";
+
+    return database.executar(sqlCheck, [idDeck, fkUsuario]).then(function (resultado) {
+        if (resultado.length === 0) {
+            return Promise.reject(new Error("Acesso negado."));
+        }
+
+        // Prepara os valores para um INSERT múltiplo
+        var values = [];
+        var placeholders = cartas.map(function (c) {
+            values.push(idDeck, c.idCarta, idBoard, c.quantidade);
+            return "(?, ?, ?, ?)";
+        }).join(", ");
+
+        var sql = `
+            INSERT INTO deck_carta (fk_deck, fk_carta, fk_board, quantidade)
+            VALUES ${placeholders}
+            ON DUPLICATE KEY UPDATE quantidade = quantidade + VALUES(quantidade)
+        `;
+        return database.executar(sql, values);
+    });
+}
+
 module.exports = {
     buscarDecksPorUsuario, buscarPorId, cadastrarDecks,
     atualizarDeck, deletarDeck, listarCartasDoDeck,
-    adicionarCarta, removerCarta, buscarDeckCompleto
+    adicionarCarta, removerCarta, buscarDeckCompleto, adicionarCartasLote
 };

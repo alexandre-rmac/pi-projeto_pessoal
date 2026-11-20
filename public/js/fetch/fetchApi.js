@@ -1,21 +1,7 @@
-
-
 const api = {
-    // Busca comandantes por nome
     async buscarComandantes(nome) {
         const res = await fetch(`/cards/comandantes?nome=${encodeURIComponent(nome)}`);
         if (!res.ok) throw new Error('Erro ao buscar comandantes');
-        return res.json();
-    },
-
-    // Busca detalhes (manaCost, text) pelo UUID
-    async detalhesPorUuids(uuids) {
-        const res = await fetch(`/cards/detalhes`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ uuids })
-        });
-        if (!res.ok) throw new Error('Erro ao buscar detalhes da carta');
         return res.json();
     },
 
@@ -25,12 +11,11 @@ const api = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dados)
         });
-        console.log(res)
         if (!res.ok) {
             const erro = await res.json();
             throw new Error(erro.erro || 'Erro ao criar deck');
         }
-        return res.json(); // Retorna { insertId, affectedRows }
+        return res.json();
     },
 
     async adicionarCartaAoDeck(idDeck, dados) {
@@ -41,8 +26,7 @@ const api = {
         });
         if (!res.ok) {
             const erro = await res.json();
-            console.error(erro)
-            throw new Error(erro.erro || 'Erro ao adicionar comandante');
+            throw new Error(erro.erro || 'Erro ao adicionar carta');
         }
         return res.json();
     },
@@ -51,7 +35,39 @@ const api = {
         const res = await fetch(`/cards/buscar?nome=${encodeURIComponent(nome)}&limite=20`);
         if (!res.ok) throw new Error('Erro ao buscar cartas');
         return res.json();
+    },
+
+    async buscarPorNomes(nomes) {
+        const res = await fetch(`/cards/lote`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nomes })
+        });
+        if (!res.ok) throw new Error('Erro ao buscar lote');
+        return res.json();
+    },
+
+    async adicionarCartasLote(idDeck, cartas, idBoard, fkUsuario) {
+        const res = await fetch(`/decks/${idDeck}/cards/bulk`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cartas, idBoard, fkUsuario })
+        });
+        if (!res.ok) throw new Error('Erro ao importar lote');
+        return res.json();
+    },
+
+    async buscarDeckCompleto(idDeck, fkUsuario) {
+        const res = await fetch(`/decks/${idDeck}/full?fkUsuario=${fkUsuario}`);
+        if (!res.ok) throw new Error("Erro ao carregar deck.");
+        return res.json();
+    },
+
+    async removerCarta(idDeck, idCarta, idBoard, fkUsuario, quantidade) {
+        const res = await fetch(`/decks/${idDeck}/cards/${idCarta}?idBoard=${idBoard}&fkUsuario=${fkUsuario}&quantidade=${quantidade}`, {
+            method: 'DELETE'
+        });
+        if (!res.ok) throw new Error("Erro ao remover carta.");
+        return res.json();
     }
-
 };
-

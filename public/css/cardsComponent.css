@@ -148,7 +148,7 @@
 
 .card-type {
     background: rgba(255, 255, 255, 0.15);
-    padding: 6px 12px;
+    padding: 0.3rem;
     font-size: 1.1rem;
     font-weight: 700;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
@@ -159,14 +159,14 @@
     min-height: max-content;
     background: rgba(255, 255, 255, 0.4);
     border-radius: 0 0 8px 8px;
-    padding: 8px 8px 36px 8px; /* Aumenta o padding inferior para o P/T não sobrepor o texto */
+    padding: 0.3rem 0.6rem;
     font-size: 1rem;
     line-height: 1.4;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    position: relative; /* Necessário para posicionar o P/T */
-    overflow: hidden; /* Impede que o texto vaze da carta */
+    position: relative;
+    text-indent: auto;
 }
 
 .keyword-highlight{

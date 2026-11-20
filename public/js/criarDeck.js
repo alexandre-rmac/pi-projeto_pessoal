@@ -1,29 +1,47 @@
 const inputBusca = document.getElementById('ipt_search_commander');
 const suggestionsBox = document.getElementById('suggestions');
 const btnCriar = document.getElementById('btn_criar');
+const inputNomeDeck = document.getElementById('ipt_nome_deck');
 
 let comandanteSelecionado = null;
+let resultadosBusca = []; // Cache local dos resultados para evitar nova requisição no clique
+
+// 1. Limpa a seleção se o usuário começar a digitar novamente
+inputBusca.addEventListener('input', () => {
+    comandanteSelecionado = null;
+    
+    // Se apagar todo o texto, limpa o preview também
+    if (inputBusca.value.trim() === '') {
+        const previewRender = document.getElementById('card-preview');
+        if (previewRender) {
+            previewRender.innerHTML = '<p class="placeholder-text">A carta aparecerá aqui</p>';
+        }
+    }
+});
 
 const buscarComandantes = debounce(async (e) => {
     const query = e.target.value.trim();
+    
     if (query.length < 2) {
         suggestionsBox.style.display = 'none';
         return;
     }
-
+    
     try {
-        const comandantes = await api.buscarComandantes(query);
-        if (comandantes.length === 0) {
+        resultadosBusca = await api.buscarComandantes(query);
+        
+        if (resultadosBusca.length === 0) {
             suggestionsBox.style.display = 'none';
             return;
         }
-
-        suggestionsBox.innerHTML = comandantes.map(c =>
-            `<div class="suggestion-item" data-uuid="${c.codigo}" data-id="${c.id}" data-identidade="${c.identidade}">${c.nome}</div>`
+        
+        // Renderiza a lista usando apenas o índice do array (evita problemas de caracteres especiais)
+        suggestionsBox.innerHTML = resultadosBusca.map((c, index) =>
+            `<div class="suggestion-item" data-index="${index}">${c.name}</div>`
         ).join('');
-
+        
         suggestionsBox.style.display = 'block';
-
+        
     } catch (err) {
         console.error(err);
     }
@@ -31,45 +49,30 @@ const buscarComandantes = debounce(async (e) => {
 
 inputBusca.addEventListener('input', buscarComandantes);
 
-// Quando o usuário clica em um comandante da lista
-suggestionsBox.addEventListener('click', async (e) => {
-    const item = e.target.closest('.suggestion-item');
-    if (!item) return;
-
-    const uuid = item.dataset.uuid;
-    // Note: Você precisará guardar o ID do banco no data-attribute também
-    // Vamos alterar a renderização das sugestões acima para incluir o ID
-
-    inputBusca.value = item.innerText;
-    suggestionsBox.style.display = 'none';
-
-    try {
-        mostrarLoading();
-        const detalhes = await api.detalhesPorUuids([uuid]);
-
-        if (detalhes.length > 0) {
-            renderizarCarta(detalhes[0], 'card-preview');
-        }
-    } catch (err) {
-        console.error(err);
-    } finally {
-        esconderLoading();
-    }
-});
-
-
-
-// NOVO EVENTO NO CLIQUE DA SUGESTÃO PARA GUARDAR O OBJETO COMPLETO
+// 2. Evento de clique unificado: Renderiza o preview e salva o Comandante de uma vez
 suggestionsBox.addEventListener('click', (e) => {
     const item = e.target.closest('.suggestion-item');
-    if (item) {
-        comandanteSelecionado = {
-            id: item.dataset.id,
-            uuid: item.dataset.uuid,
-            nome: item.innerText,
-            identidade: item.dataset.identidade
-        };
-    }
+    if (!item) return;
+    
+    const index = Number(item.dataset.index);
+    const cartaSelecionada = resultadosBusca[index];
+
+    if (!cartaSelecionada) return;
+
+    inputBusca.value = cartaSelecionada.name;
+    suggestionsBox.style.display = 'none';
+
+    // Salva o objeto completo do comandante selecionado
+    comandanteSelecionado = cartaSelecionada;
+
+    // Adapta as cores para o formato que o cardRender.js espera
+    const cardPreview = {
+        ...cartaSelecionada,
+        colors: cartaSelecionada.colorsStr ? cartaSelecionada.colorsStr.split('') : [],
+        colorsId: cartaSelecionada.identidade ? cartaSelecionada.identidade.split('') : []
+    };
+
+    renderizarCarta(cardPreview, 'card-preview');
 });
 
 // Fecha sugestões ao clicar fora
@@ -79,8 +82,9 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// 3. Ação do botão Criar Deck
 btnCriar.addEventListener('click', async () => {
-    const nomeDeck = document.getElementById('ipt_nome_deck').value.trim();
+    const nomeDeck = inputNomeDeck.value.trim();
     const fkUsuario = sessionStorage.getItem('ID_USUARIO');
 
     if (!nomeDeck || !comandanteSelecionado || !fkUsuario) {
@@ -91,27 +95,26 @@ btnCriar.addEventListener('click', async () => {
     try {
         mostrarLoading();
 
-        // 1. Cria o Deck
+        // Cria o Deck
         const resultadoCriacao = await api.criarDeck({
             nome: nomeDeck,
-            commander: comandanteSelecionado.nome,
+            commander: comandanteSelecionado.name,
             identidade: comandanteSelecionado.identidade,
             fkUsuario: fkUsuario
         });
 
-        console.log("Resposta da criação do deck:", resultadoCriacao);
-
-        // O MySQL retorna o ID gerado na propriedade insertId
-        const idNovoDeck = resultadoCriacao.insertId;
+        // Verificação dupla para pegar o insertId (dependendo da versão do driver)
+        const idNovoDeck = resultadoCriacao.insertId || resultadoCriacao[0]?.insertId;
 
         if (!idNovoDeck) {
             throw new Error("O back-end não retornou o ID do deck criado.");
         }
 
-        // 2. Adiciona o Comandante na Mainboard (idBoard: 1, quantidade: 1)
+        // Adiciona o Comandante na Mainboard (idBoard: 1, quantidade: 1)
+        // Agora garante que usará o ID exato da carta que foi renderizada no preview
         await api.adicionarCartaAoDeck(idNovoDeck, {
-            idCarta: comandanteSelecionado.id, // Usa o ID numérico, não o UUID
-            idBoard: 1, // 1 = Mainboard
+            idCarta: comandanteSelecionado.id, 
+            idBoard: 1,
             quantidade: 1,
             fkUsuario: fkUsuario
         });
