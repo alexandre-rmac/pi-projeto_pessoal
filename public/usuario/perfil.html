@@ -1,66 +1,107 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alramac - Seu Perfil</title>
-
-    <script src="/js/navbar.js"></script>
-    <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
-
+    <title>Perfil - MTG Alramac</title>
+    <link rel="icon" href="/assets/icon/favicon2.ico">
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="/css/pages/perfil.css">
+    <link rel="stylesheet" href="/css/cardsComponent.css">
+    <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
 
-    <link rel="icon" href="/assets/icon/favicon2.ico">
-
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/components/modal.js" defer></script>
+    <script src="/js/fetch/fetchApi.js" defer></script>
+    <script src="/js/fetch/fetchLoad.js" defer></script>
+    <script src="/js/perfil.js" defer></script>
 </head>
 
 <body>
     <div id="navbar-container"></div>
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner"></div>
+    </div>
 
-    <section class="perfil">
-        <div class="perfil-intro">
-            <div class="perfil-titulo-container">
-                <p class="subtitulo">SEUS DECKS</p>
-                <h3 class="titulo">Perfil</h3>
+    <!-- Modal de Alerta -->
+    <div id="modal-alerta" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="titulo" id="modal-titulo" style="margin-bottom: 1rem;">Aviso</h3>
+            <div id="modal-mensagem"
+                style="margin-bottom: 1.5rem; max-height: 200px; overflow-y: auto; font-size: 0.9rem;"></div>
+            <div id="modal-botoes" style="width: 100%;"></div>
+        </div>
+    </div>
+
+    <main class="perfil-container">
+        <header class="perfil-header">
+            <div>
+                <span class="subtitulo">SEUS DECKS</span>
+                <h1 class="titulo">Perfil</h1>
                 <p class="descricao">Veja seus decks cadastrados e um resumo rápido da sua coleção.</p>
             </div>
-            <a href="/usuario/criar-deck.html" class="btn"><i class="fa-solid fa-plus"></i> Criar Deck</a>
-        </div>
-        <div class="resumo">
-            <div class="resumo-kpi">
-                <p class="kpi-titulo">Indicadores da coleção</p>
-                <div class="kpi-total-container">
-                    <p class="kpi-total">Total de decks</p>
-                    <p id="total_decks" class="total-decks-numero">2</p>
+            <a href="/criar-deck.html" class="btn"><i class="fa-solid fa-plus"></i> Criar Deck</a>
+        </header>
+
+        <!-- SEÇÃO SUPERIOR: INDICADORES -->
+        <section class="dashboard-top">
+            <div class="painel-indicadores">
+                <h3 class="titulo" style="font-size: 1.2rem;">Coleção</h3>
+
+                <div class="stat-box">
+                    <span class="descricao">Total de decks</span>
+                    <strong id="stat-total-decks" class="titulo">0</strong>
                 </div>
-                <div class="kpi-cores">
-                    <p class="kpi-cores">Cores Favoritas</p>
-                    <div class="kpi-cores-favoritas">
-                        <div id="cores_favoritas" class="kpi-cores-exibicao">
-                            VERDE
-                        </div>
-                    </div>
-                    <div class="kpi-status">
-                        <div class="kpi-status-completos">
-                            <span class="circulo"></span>
-                            <p class="status-completos">Completos</p>
-                            <span id="kpi-completos">1</span>
-                        </div>
+
+                <div class="stat-box">
+                    <span class="descricao">Cores favoritas</span>
+                    <div id="cores-favoritas" class="cores-container"></div>
+                    <span class="descricao" id="texto-cores"
+                        style="font-size: 0.75rem; margin-top: 0.5rem; display: block;">Empate entre ...</span>
+                </div>
+
+                <div class="stat-box">
+                    <div class="status-lista">
+                        <div><i class="fa-solid fa-circle" style="color: var(--destaque-verde); font-size: 0.6rem;"></i>
+                            Completos <strong id="stat-completos">0</strong></div>
+                        <div><i class="fa-solid fa-circle" style="color: var(--destaque); font-size: 0.6rem;"></i>
+                            Incompletos <strong id="stat-incompletos">0</strong></div>
                     </div>
                 </div>
             </div>
-            <div class="resumo-grafico">
-                grafico
+
+            <div class="painel-cores">
+                <h3 class="titulo" style="font-size: 1.2rem; margin-bottom: 1rem;">Decks por cor</h3>
+                <div id="grafico-cores" class="grafico-barras">
+                    <!-- Injetado via JS -->
+                </div>
             </div>
-        </div>
+        </section>
 
+        <!-- SEÇÃO INFERIOR: CARDS DE DECK -->
+        <section class="dashboard-bottom">
+            <div id="grid-decks" class="grid-decks">
+                <!-- Injetado via JS -->
 
+                <!-- Card Fixo: Criar Novo Deck -->
+                <a href="/criar-deck.html" class="deck-card card-criar" id="card-criar-deck">
+                    <div class="icone-mais"><i class="fa-solid fa-plus"></i></div>
+                    <h3 class="titulo">Uma nova estratégia</h3>
+                    <p class="descricao">Escolha seu comandante e dê forma à próxima lista da sua coleção.</p>
+                    <span class="btn-text">Criar Deck</span>
+                </a>
+            </div>
 
-    </section>
+            <div class="footer-tip">
+                <i class="fa-regular fa-comment-dots"></i> Continue de onde parou. Cada escolha faz parte da sua
+                estratégia.
+            </div>
+        </section>
+    </main>
 </body>
 
 </html>

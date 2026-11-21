@@ -26,12 +26,14 @@ function calcularGeracaoMana(text, identidadeDeck) {
 }
 
 function perfil(fkUsuario) {
-    var sqlDecks = "SELECT id, nome, identidade FROM deck WHERE fk_usuario = ?";
+    // ADICIONADO O CAMPO commander AQUI
+    var sqlDecks = "SELECT id, nome, commander, identidade FROM deck WHERE fk_usuario = ?";
     var sqlMainboard = `
         SELECT dc.fk_deck, COALESCE(SUM(dc.quantidade), 0) AS total
         FROM deck_carta dc
         INNER JOIN board b ON b.id = dc.fk_board
-        WHERE b.descricao = 'Mainboard' AND dc.fk_deck IN (SELECT id FROM deck WHERE fk_usuario = ?)
+        WHERE b.descricao = 'Mainboard'
+          AND dc.fk_deck IN (SELECT id FROM deck WHERE fk_usuario = ?)
         GROUP BY dc.fk_deck
     `;
 
@@ -41,10 +43,10 @@ function perfil(fkUsuario) {
     ]).then(function (rs) {
         var decks = rs[0];
         var totalPorDeck = {};
-        rs[1].forEach(r => totalPorDeck[r.fk_deck] = Number(r.total));
+        rs[1].forEach(function (r) { totalPorDeck[r.fk_deck] = Number(r.total); });
 
         var coresFreq = { W: 0, U: 0, B: 0, R: 0, G: 0 };
-        var decksStatus = decks.map(d => {
+        var decksStatus = decks.map(function (d) {
             var identidadeDeck = d.identidade || "C";
             if (identidadeDeck !== "C") {
                 for (var i = 0; i < identidadeDeck.length; i++) {
@@ -53,13 +55,22 @@ function perfil(fkUsuario) {
             }
             var total = totalPorDeck[d.id] || 0;
             var status = total < 100 ? "incompleto" : (total === 100 ? "completo" : "invalido");
-            return { id: d.id, nome: d.nome, identidade: identidadeDeck, status: status, totalMainboard: total };
+            
+            // Retorna os dados do deck junto com os status calculados
+            return { 
+                id: d.id, 
+                nome: d.nome, 
+                commander: d.commander,
+                identidade: identidadeDeck, 
+                status: status, 
+                totalMainboard: total 
+            };
         });
 
-        var utilizadas = Object.keys(coresFreq).filter(c => coresFreq[c] > 0);
+        var utilizadas = Object.keys(coresFreq).filter(function (c) { return coresFreq[c] > 0; });
         var maxFreq = 0;
-        utilizadas.forEach(c => { if (coresFreq[c] > maxFreq) maxFreq = coresFreq[c]; });
-        var maisUtilizadas = utilizadas.filter(c => coresFreq[c] === maxFreq);
+        utilizadas.forEach(function (c) { if (coresFreq[c] > maxFreq) maxFreq = coresFreq[c]; });
+        var maisUtilizadas = utilizadas.filter(function (c) { return coresFreq[c] === maxFreq; });
 
         return {
             totalDecks: decks.length,
