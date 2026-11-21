@@ -1,71 +1,93 @@
--- Arquivo de apoio, caso você queira criar tabelas como as aqui criadas para a API funcionar.
--- Você precisa executar os comandos no banco de dados para criar as tabelas,
--- ter este arquivo aqui não significa que a tabela em seu BD estará como abaixo!
-
-/*
-comandos para mysql server
-*/
-
-CREATE DATABASE mtg_alramac;
-
+CREATE DATABASE IF NOT EXISTS mtg_alramac;
 USE mtg_alramac;
 
-CREATE TABLE cadastro (
+CREATE TABLE IF NOT EXISTS cadastro (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	email VARCHAR(50) NOT NULL,
-	senha VARCHAR(50) NOT NULL,
-	dt_cadastro DATE DEFAULT DATE(CURRENT_TIMESTAMP),
-	codigo_ativacao VARCHAR(50),
+	email VARCHAR(255) NOT NULL,
+	senha VARCHAR(255) NOT NULL,
+	dt_cadastro DATE DEFAULT (CURRENT_DATE),
 	status_cadastro TINYINT NOT NULL DEFAULT 1
 );
 
-CREATE TABLE usuario (
+CREATE TABLE IF NOT EXISTS usuario (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	nome VARCHAR(50) NOT NULL,
-
 	fk_cadastro INT NOT NULL,
 	FOREIGN KEY (fk_cadastro) REFERENCES cadastro(id)
 );
 
-CREATE TABLE aviso (
+CREATE TABLE IF NOT EXISTS aviso (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	titulo VARCHAR(100),
-	descricao VARCHAR(150),
+	descricao VARCHAR(255),
+    tipo_aviso TINYINT DEFAULT 0,
 	fk_usuario INT,
 	FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
 );
 
-create table deck (
+CREATE TABLE IF NOT EXISTS deck (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	nome VARCHAR(255),
     commander VARCHAR(100),
-    cores CHAR(5),
-    dt_criacao DATE,
+    -- commander_uuid CHAR(36),
+    identidade	 VARCHAR(5),
+    dt_criacao DATE DEFAULT (CURRENT_DATE),
 	fk_usuario INT,
 	FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
 )AUTO_INCREMENT = 1000;
 
-create table carta (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(255),
-	codigo VARCHAR(20) UNIQUE, -- uuid
-    cmc INT,
-    tipo VARCHAR(255),
-    cores CHAR(5)
-);
-
-create table tipo_board (
+CREATE TABLE IF NOT EXISTS board (
 	id INT PRIMARY KEY AUTO_INCREMENT,
     descricao VARCHAR(50)
 );
 
-create table deck_carta (
+CREATE TABLE IF NOT EXISTS carta (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(255),
+	codigo CHAR(36) UNIQUE, -- uuid
+    cmc INT,
+    cores VARCHAR(5),
+    identidade VARCHAR(5),
+    edhRank FLOAT4,
+	custo_mana VARCHAR(50),
+	texto TEXT,
+	poder VARCHAR(5),
+	resistencia VARCHAR(5)
+);
+
+CREATE TABLE IF NOT EXISTS deck_carta (
 	fk_deck INT,
     fk_carta INT,
-    fk_tipo_board,
+    fk_board INT,
     quantidade INT,
-    PRIMARY KEY(fk_deck, fk_carta, fk_tipo_board),
-    FOREIGN KEY (fk_deck) REFERENCES deck(id),
+    PRIMARY KEY(fk_deck, fk_carta, fk_board),
+    FOREIGN KEY (fk_deck) REFERENCES deck(id) ON DELETE CASCADE,
     FOREIGN KEY (fk_carta) REFERENCES carta(id),
-    FOREIGN KEY (fk_tipo_board) REFERENCES tipo_board(id)
+    FOREIGN KEY (fk_board) REFERENCES board(id)
 );
+show create table deck_carta;
+alter table deck_carta drop constraint deck_carta_ibfk_1;
+alter table deck_carta add constraint FOREIGN KEY (fk_deck) references deck(id) ON delete cascade;
+
+CREATE TABLE IF NOT EXISTS tipo (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    descricao VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS tipo_carta (
+    fk_tipo INT,
+    fk_carta INT,
+    PRIMARY KEY(fk_tipo, fk_carta),
+    FOREIGN KEY (fk_tipo) REFERENCES tipo(id),
+    FOREIGN KEY (fk_carta) REFERENCES carta(id)
+    
+);
+
+INSERT INTO board (descricao) VALUES
+('Mainboard'),
+('Sideboard'),
+('Maybeboard'),
+('Wishboard');
+
+INSERT INTO cadastro (email, senha) VALUE ('teste@teste.com', 'Teste@123');
+INSERT INTO usuario (nome, fk_cadastro) VALUE ('Meste', 1);

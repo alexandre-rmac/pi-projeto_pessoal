@@ -1,0 +1,349 @@
+.container {
+    display: flex;
+    gap: 1rem;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    transition: flex 0.3s ease;
+}
+
+aside,
+.deck-area {
+    background: var(--fundo-alt);
+    border: 1px solid var(--borda);
+    border-radius: 0.625rem;
+    padding: 1.5rem;
+}
+.deck-area {
+    flex-grow: 2;
+
+}
+
+.sidebar-esquerda {
+    position: sticky;
+    top: 6rem;
+    height: calc(100vh - 8rem);
+    overflow-y: auto;
+    min-width: 320px;
+}
+
+/* Busca e Inputs */
+.search-box {
+    display: flex;
+    align-items: center;
+    background: var(--fundo);
+    border: 1px solid var(--borda);
+    border-radius: 4px;
+    padding: 0 1rem;
+    position: relative;
+}
+
+.search-box i {
+    color: var(--texto-suave);
+}
+
+.search-box input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--texto);
+    padding: 1rem 0.5rem;
+    outline: none;
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--fundo-alt);
+    border: 1px solid var(--borda);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--borda);
+}
+
+.suggestion-item:hover {
+    background: var(--fundo-destaque);
+    color: var(--destaque);
+}
+
+/* Preview */
+#preview-card-render {
+    transform: scale(0.82);
+    transform-origin: top center;
+    margin-bottom: -80px;
+}
+
+.preview-acoes select,
+.preview-acoes input {
+    background: var(--fundo);
+    border: 1px solid var(--borda);
+    color: var(--texto);
+    padding: 0.4rem;
+    border-radius: 4px;
+}
+
+.btn-excluir {
+    color: var(--destaque-vermelho) !important;
+    border-color: var(--destaque-vermelho) !important;
+}
+
+.btn-excluir:hover {
+    background: var(--destaque-vermelho) !important;
+    color: var(--fundo) !important;
+}
+
+/* Indicadores e Validações */
+.sidebar-direita {
+    position: sticky;
+    display: flex;
+    
+    justify-self: flex-end;
+    top: 6rem;
+    height: calc(100vh - 8rem);
+    overflow-y: auto;
+    gap: 0.5rem;
+}
+
+#sidebar-expandida {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-icon {
+    background: transparent;
+    border: 1px solid var(--borda);
+    color: var(--texto);
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 150ms;
+    padding: 0;
+}
+
+.btn-recolher-sidebar {
+    position: relative;
+    display: flex;
+    justify-self: flex-end;
+    align-self: flex-end;
+}
+
+.btn-icon:hover {
+    background: var(--fundo-destaque);
+    border-color: var(--destaque);
+    color: var(--destaque);
+}
+
+#btn-dashboard {
+    display: flex;
+    border: 0.1rem solid var(--borda-forte);
+    padding: 1rem;
+    font-size: 1.3rem;
+    align-self: center;
+    gap: 0.3rem;
+    transition: all ease-in-out 150ms;
+}
+
+#btn-dashboard:hover {
+    box-shadow: 0 0 0.1rem 0.1rem var(--borda-forte);
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.stat-item {
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: 4px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.stat-item strong {
+    display: block;
+    font-size: 1.5rem;
+    color: var(--destaque);
+    font-family: var(--fonte-titulo);
+}
+
+#lista-validacao {
+    list-style: none;
+    padding: 0;
+}
+
+#lista-validacao li {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--texto-suave);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#lista-validacao li.ok {
+    color: var(--destaque-verde);
+}
+
+#lista-validacao li.erro {
+    color: var(--destaque-vermelho);
+}
+
+.deck-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-bottom: 0.1rem ridge var(--destaque);
+}
+
+.header-titulo {
+    display: flex;
+    flex-grow: 2;
+    flex-direction: column;
+}
+
+.status-salvamento {
+    /* flex-grow: 2; */
+    font-size: 1.5rem;
+}
+
+/* Abas do Board */
+.board-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    border-bottom: 1px solid var(--borda);
+    padding-bottom: 0.5rem;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--texto-suave);
+    font-family: var(--fonte-corpo);
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    transition: 150ms;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tab-btn:hover {
+    color: var(--texto);
+    background: var(--fundo-destaque);
+}
+
+.tab-btn.active {
+    color: var(--destaque);
+    border-bottom: 2px solid var(--destaque);
+    background: var(--fundo-destaque);
+}
+
+.badge {
+    background: var(--fundo-alt);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: inherit;
+}
+
+/* Área do Board */
+.board-content {
+    padding: 0.5rem 0;
+    min-height: 300px;
+    overflow: hidden;
+}
+
+.grid-cmc {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.cmc-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+/* ESTILO DO COMANDANTE */
+.cmc-column.commander-column {
+    border: 1px dashed var(--borda-forte);
+    border-radius: 0.625rem;
+    padding: 0.5rem 1rem;
+
+}
+
+.commander-column .cmc-title {
+    display: block;
+    text-align: center;
+    color: var(--destaque);
+    font-size: 0.85rem;
+    font-family: var(--fonte-titulo);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.commander-column .card-visual-wrapper {
+    height: 215px !important;
+    z-index: 10;
+    margin-top: 0 !important;
+    overflow: visible !important;
+}
+
+.commander-column .mtg-card {
+    box-shadow: 0 0 15px var(--destaque-suave);
+}
+
+.card-visual-wrapper {
+    width: 140px;
+    height: 52px;
+    overflow: hidden;
+    position: relative;
+    margin-top: -15px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.card-visual-wrapper:first-child {
+    margin-top: 0;
+}
+
+/* A ÚLTIMA CARTA (Ordem Alfabética A-Z) fica na frente */
+.card-visual-wrapper:last-child {
+    height: 215px;
+    overflow: visible;
+    /* z-index: 2; */
+    margin-bottom: 10px;
+}
+
+.card-visual-wrapper .mtg-card {
+    transform: scale(0.41);
+    transform-origin: top left;
+    pointer-events: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
+}

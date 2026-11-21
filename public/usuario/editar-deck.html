@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Deck - MTG Alramac</title>
+    <link rel="icon" href="/assets/icon/favicon2.ico">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="/css/pages/editarDeck.css">
+    <link rel="stylesheet" href="/css/cardsComponent.css">
+    <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/components/modal.js" defer></script>
+    <script src="/js/components/importCsv.js" defer></script>
+    <script src="/js/fetch/fetchLoad.js" defer></script>
+    <script src="/js/fetch/fetchApi.js" defer></script>
+    <script src="/js/fetch/cardRender.js" defer></script>
+    <script src="/js/editarDeck.js" defer></script>
+
+<body>
+    <div id="navbar-container"></div>
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="modal-alerta" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="titulo" id="modal-titulo" style="margin-bottom: 1rem;">Aviso</h3>
+            <div id="modal-mensagem"
+                style="margin-bottom: 1.5rem; max-height: 200px; overflow-y: auto; font-size: 0.9rem;"></div>
+            <button class="btn" style="width: 100%;"
+                onclick="document.getElementById('modal-alerta').classList.add('hidden')">Fechar</button>
+        </div>
+    </div>
+
+    <main class="container">
+        <aside class="sidebar-esquerda" style="display: flex; flex-direction: column;">
+            <h2 class="titulo" style="font-size: 1.5rem; margin-bottom: 1rem;">Buscar por nome</h2>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-card" placeholder="Buscar por nome da carta...">
+                <div id="suggestions" class="suggestions"></div>
+            </div>
+
+            <div id="preview-carta" class="preview-container hidden"
+                style="margin-top: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                <div id="preview-card-render"></div>
+                <div id="preview-acoes" class="preview-acoes hidden"
+                    style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem; padding: 0 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <label for="input-qtd" style="font-size: 0.85rem; color: var(--texto-suave);">Qtd:</label>
+                        <input type="number" id="input-qtd" min="1" value="1"
+                            style="width: 60px; padding: 4px; border-radius: 4px; border: 1px solid var(--borda); background: var(--fundo); color: var(--texto);">
+                        <select id="select-board"
+                            style="flex-grow: 1; padding: 4px; border-radius: 4px; border: 1px solid var(--borda); background: var(--fundo); color: var(--texto);">
+                            <option value="1">Mainboard</option>
+                            <option value="2">Sideboard</option>
+                            <option value="3">Maybeboard</option>
+                            <option value="4">Wishboard</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="btn-mover-preview" class="btn-outline"
+                            style="flex-grow: 1; font-size: 0.85rem; padding: 0.5rem;">Mover</button>
+                        <button id="btn-excluir-preview" class="btn-outline btn-excluir"
+                            style="flex-grow: 1; font-size: 0.85rem; padding: 0.5rem;">Excluir</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="flex-grow: 1;"></div>
+
+            <button class="btn" style="width: 100%; margin-top: 0.5rem;">Pesquisa Avançada</button>
+            <div class="csv-import" style="margin-top: 1rem;">
+                <label for="csv-file" class="btn-outline" style="width: 100%;">
+                    <i class="fa-solid fa-file-csv"></i> Importar Lista (CSV)
+                </label>
+                <input type="file" id="csv-file" accept=".csv" style="display: none;">
+            </div>
+        </aside>
+
+        <section class="deck-area">
+            <div class="deck-header">
+                <div class="header-titulo">
+                    <h1 class="titulo" id="titulo-deck">[Nome do deck]</h1>
+                    <p class="descricao" id="subtitulo-comandante">Comandante: Carregando...</p>
+                </div>
+                <div class="status-salvamento" id="status-salvamento"><i class="fa-solid fa-check"></i> Salvo</div>
+            </div>
+
+            <!-- NAVEGAÇÃO DE ABAS (TABS) -->
+            <div class="board-tabs">
+                <button class="tab-btn active" data-board="1">Mainboard <span class="badge"
+                        id="badge-1">0</span></button>
+                <button class="tab-btn" data-board="2">Sideboard <span class="badge" id="badge-2">0</span></button>
+                <button class="tab-btn" data-board="3">Maybeboard <span class="badge" id="badge-3">0</span></button>
+                <button class="tab-btn" data-board="4">Wishboard <span class="badge" id="badge-4">0</span></button>
+            </div>
+
+            <!-- ÁREA DO GRID -->
+            <div class="board-content" id="board-content-area">
+                <div id="grid-cmc" class="grid-cmc"></div>
+            </div>
+        </section>
+
+        <aside class="sidebar-direita" id="sidebar-direita">
+            <!-- VISÃO EXPANDIDA -->
+            <div id="sidebar-expandida" class="hidden" style="height: 100%;">
+                <button id="btn-recolher-sidebar" class="btn-icon" title="Recolher painel">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <a id="btn-dashboard" href="#" class="btn-outline" title="Ver Dashboard do Deck"
+                    style="color: var(--destaque); text-decoration: none;">
+                    <i class="fa-solid fa-chart-simple"></i> Dashboard
+                </a>
+
+
+                <div class="stat-grid">
+                    <div class="stat-item"><span class="descricao">Total</span><strong id="stat-total">0</strong></div>
+                    <div class="stat-item"><span class="descricao">Criaturas</span><strong
+                            id="stat-criaturas">0</strong></div>
+                    <div class="stat-item"><span class="descricao">Não-Criaturas</span><strong
+                            id="stat-nao-criaturas">0</strong></div>
+                    <div class="stat-item"><span class="descricao">Terrenos</span><strong id="stat-terrenos">0</strong>
+                    </div>
+                    <div class="stat-item" style="grid-column: span 2;"><span class="descricao">CMC Médio</span><strong id="stat-cmc-medio">0.0</strong></div>
+                </div>
+
+                <div class="painel-validacao" style="margin-top: 2rem;">
+                    <h3 class="titulo" style="font-size: 1.25rem;">Validação</h3>
+                    <ul id="lista-validacao" style="margin-top: 1rem;">
+                        <li id="val-total"><i class="fa-solid fa-circle-notch"></i> 0 / 100 cartas</li>
+                        <li id="val-identidade"><i class="fa-solid fa-circle-notch"></i> Identidade de cor</li>
+                        <li id="val-copias"><i class="fa-solid fa-circle-notch"></i> Sem cópias repetidas</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- VISÃO RECOLHIDA -->
+            <div id="sidebar-recolhida" style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem; height: 100%;">
+                <button id="btn-abrir-sidebar" class="btn-icon" title="Expandir painel">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <a id="btn-dashboard-sidebar" href="#" class="btn-icon" title="Ver Dashboard do Deck"
+                    style="color: var(--destaque); text-decoration: none;">
+                    <i class="fa-solid fa-chart-simple"></i>
+                </a>
+
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--superficie); border: 1px solid var(--borda); border-radius: 8px; padding: 1rem 0.5rem; width: 100%;">
+                    <i class="fa-solid fa-layer-group" style="color: var(--texto-suave); margin-bottom: 0.5rem;"></i>
+                    <strong id="stat-total-recolhido" class="titulo"
+                        style="font-size: 1.2rem; color: var(--destaque);">0</strong>
+                </div>
+            </div>
+        </aside>
+    </main>
+</body>
+
+</html>

@@ -221,7 +221,7 @@
 .form-footer {
     display: flex;
     width: 100%;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
     gap: 0.25rem;
     opacity: 65%;

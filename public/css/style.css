@@ -1,0 +1,33 @@
+.titulo {
+    color: var(--texto);
+    font-family: var(--fonte-titulo);
+    font-size: 2.5rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 110%;
+}
+
+.subtitulo {
+    color: var(--destaque);
+    font-family: var(--fonte-corpo);
+    font-size: 0.95rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.125rem;
+}
+
+.descricao {
+    color: var(--texto-suave);
+    font-family: var(--fonte-corpo);
+    font-size: 0.85rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 160%;
+}
+
+.btn {
+    display: inline;
+    align-content: center;
+    color: var(--fundo-alt);
+}

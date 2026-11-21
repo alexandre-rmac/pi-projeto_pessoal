@@ -9,7 +9,7 @@ window.addEventListener('pageshow', () => {
 async function entrar(event) {
     event.preventDefault()
     btn_entrar.disabled = true
-    aguardar();
+    // aguardar();
 
     const ipt_email = document.getElementById('email_input').value
     const ipt_senha = document.getElementById('senha_input').value
@@ -17,7 +17,7 @@ async function entrar(event) {
     if (ipt_email == "" || ipt_senha == "") {
         msg_erro_login.innerHTML = 'Insira seu email e sua senha'
         btn_entrar.disabled = false
-        finalizarAguardar();
+        // finalizarAguardar();
         return false;
     }
     else {
@@ -52,7 +52,7 @@ async function entrar(event) {
 
                 if (json.decks.length === 0) {
                     setTimeout(function () { 
-                        window.location = './usuario/criarDeck.html';
+                        window.location = './usuario/criar-deck.html';
                     }, 1000)
                 } else {
                     setTimeout(function () {

@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon --exec node app.js"
+    "dev": "nodemon --exec node app.js",
+    "build-index": "node scripts/build-index.js",
+    "import-cards": "node scripts/import-cards.js"
   },
   "author": "Feito pelos desenvolvedores @ São Paulo Tech School / Bandtec Digital School",
   "license": "MIT",

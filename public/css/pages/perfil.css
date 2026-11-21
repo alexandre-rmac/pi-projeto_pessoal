@@ -1,0 +1,298 @@
+.perfil-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.perfil-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--borda);
+    padding-bottom: 1rem;
+}
+
+.dashboard-top {
+    display: flex;
+    width: 100%;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.painel-indicadores,
+.painel-cores {
+    background: var(--fundo-alt);
+    border: 1px solid var(--borda);
+    border-radius: 0.625rem;
+    padding: 1.5rem;
+}
+.painel-indicadores{
+    width: 45%;
+}
+.painel-cores {
+    width: 65%;
+}
+.stat-box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.25rem;
+    justify-content: center;
+    align-items: center;
+}
+.total-decks {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.total-decks p {
+    flex-flow: column;
+    flex-wrap: wrap;
+}
+.stat-box strong {
+    display: block;
+    font-size: 2rem;
+    color: var(--destaque);
+    font-family: var(--fonte-titulo);
+}
+
+.cores-container {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.cor-icone,
+.cor-icone-decks {
+    width: 3.3rem;
+    height: 3.3rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.1rem;
+    color: var(--destaque);
+}
+.cor-icone-decks {
+    font-size: 1.5rem;
+    color: var(--fundo);
+}
+.status-lista {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: space-between;
+}
+.status-lista div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--superficie);
+}
+
+.status-lista strong {
+    color: var(--texto);
+}
+
+.grafico-barras {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.barra-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.barra-label {
+    /* width: fit-content; */
+    font-size: 1.5rem;
+    color: var(--texto-suave);
+}
+
+.barra-track {
+    flex-grow: 1;
+    height: 1rem;
+    background: var(--superficie);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.barra-fill {
+    height: 100%;
+    border-radius: 0.625rem;
+}
+
+.barra-value {
+    width: 20px;
+    text-align: right;
+    font-size: 1.5rem;
+    color: var(--destaque);
+}
+
+.dashboard-bottom {
+    width: 100%;
+}
+
+.grid-decks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.deck-card {
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--texto);
+    transition: transform 0.2s;
+}
+
+.deck-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--destaque);
+}
+
+.deck-card-header {
+    height: 100px;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+}
+
+.deck-card-status {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.deck-card-status.completo {
+    color: var(--destaque-verde);
+}
+
+.deck-card-status.incompleto {
+    color: var(--destaque);
+}
+
+.deck-card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.deck-card-titulo {
+    font-family: var(--fonte-titulo);
+    font-size: 1.3rem;
+    margin-bottom: 0.2rem;
+}
+
+.deck-card-comandante {
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+    margin-bottom: 1rem;
+}
+
+.deck-card-progresso {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    border-bottom: 1px solid var(--borda);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.deck-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
+.btn-action {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    border: 1px solid var(--borda);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--texto);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 150ms;
+}
+
+.btn-action:hover {
+    background: var(--fundo-destaque);
+}
+
+.btn-action.excluir:hover {
+    border-color: var(--destaque-vermelho);
+    color: var(--destaque-vermelho);
+}
+
+/* Card de Criar Novo Deck */
+.card-criar {
+    border: 1px dashed var(--borda-forte);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem;
+    min-height: 250px;
+    gap: 1rem;
+}
+
+.icone-mais {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--fundo-alt);
+    border: 1px solid var(--borda);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    color: var(--texto-suave);
+    transition: 150ms;
+}
+
+.card-criar:hover .icone-mais {
+    background: var(--destaque);
+    color: var(--fundo);
+}
+
+.btn-text {
+    color: var(--destaque);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.footer-tip {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: var(--texto-suave);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

@@ -22,6 +22,7 @@ function executar(instrucao, params) {
         var callback = function(erro, resultados) {
             conexao.end();
             if (erro) {
+                console.error(erro)
                 reject(erro)
             } else {
                 console.log(resultados);
