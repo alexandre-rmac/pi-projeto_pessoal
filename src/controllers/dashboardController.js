@@ -15,24 +15,17 @@ function perfil(req, res) {
 }
 
 function deck(req, res) {
-  var idDeck = parseInt(req.params.id);
-  var fkUsuario = parseInt(req.query.fkUsuario);
-  if (!idDeck || idDeck <= 0) {
-    return res.status(400).json({ erro: "ID do deck inválido." });
-  }
-  if (!fkUsuario || fkUsuario <= 0) {
-    return res.status(400).json({ erro: "fkUsuario obrigatório." });
-  }
+    var idDeck = parseInt(req.params.id);
+    var fkUsuario = parseInt(req.query.fkUsuario);
 
-  dashboardModel.deck(idDeck, fkUsuario)
-    .then(function (dados) {
-      if (!dados) return res.status(404).json({ erro: "Deck não encontrado ou não pertence ao usuário." });
-      res.json(dados);
-    })
-    .catch(function (erro) {
-      console.error(erro);
-      res.status(500).json({ erro: "Erro ao carregar dashboard do deck." });
-    });
+    if (!idDeck || !fkUsuario) return res.status(400).json({ erro: "Parâmetros inválidos." });
+
+    dashboardModel.deck(idDeck, fkUsuario)
+        .then(r => {
+            if (!r) return res.status(404).json({ erro: "Deck não encontrado." });
+            res.json(r);
+        })
+        .catch(e => { console.error(e); res.status(500).json({ erro: "Erro na dashboard do deck." }); });
 }
 
 module.exports = { perfil, deck };

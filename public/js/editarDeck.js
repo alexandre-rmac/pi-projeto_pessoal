@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     configurarAbas();
-    configurarImportacaoCSV(); // Vem do importCsv.js
+    configurarImportacaoCSV();
     configurarAcoesPreview();
     configurarBuscaCartas();
 
@@ -91,6 +91,7 @@ function renderizarAbaAtiva(cartas, comandante) {
     const terrenosBasicos = [];
 
     cartas.forEach(c => {
+        if (c.idCarta === comandante.idCarta) return
         if (c.type.includes('Land')) {
             if (c.type.includes('Basic')) terrenosBasicos.push(c);
             else terrenosNaoBasicos.push(c);
@@ -101,7 +102,7 @@ function renderizarAbaAtiva(cartas, comandante) {
         }
     });
 
-    if (abaAtiva === 1 && comandante && cidCarta == comandante.idCarta) {
+    if (abaAtiva === 1 && comandante) {
         const colComandante = document.createElement('div');
         colComandante.className = 'cmc-column commander-column';
         colComandante.innerHTML = `<span class="cmc-title"><i class="fa-solid fa-crown"></i> Comandante</span>`;
