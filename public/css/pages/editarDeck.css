@@ -1,18 +1,31 @@
 .container {
-    display: grid;
-    grid-template-columns: 320px 1fr 300px;
-    gap: 2rem;
-    max-width: 1500px;
+    display: flex;
+    grid-template-columns: auto 1fr 300px;
+    gap: 1rem;
+    max-width: 100%;
     margin: 0 auto;
     padding: 2rem;
+    transition: grid-template-columns 0.3s ease;
+}
+
+.container.sidebar-collapsed {
+    grid-template-columns: 320px 1fr 70px;
 }
 
 aside,
 .deck-area {
     background: var(--fundo-alt);
     border: 1px solid var(--borda);
-    border-radius: 8px;
+    border-radius: 0.625rem;
     padding: 1.5rem;
+}
+
+.sidebar-esquerda {
+    position: sticky;
+    top: 6rem;
+    height: calc(100vh - 8rem);
+    overflow-y: auto;
+    min-width: 320px;
 }
 
 /* Busca e Inputs */
@@ -90,6 +103,63 @@ aside,
 }
 
 /* Indicadores e Validações */
+.sidebar-direita {
+    position: sticky;
+    top: 6rem;
+    height: calc(100vh - 8rem);
+    overflow-y: auto;
+    gap: 0.5rem;
+}
+
+#sidebar-expandida {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-icon {
+    background: transparent;
+    border: 1px solid var(--borda);
+    color: var(--texto);
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 150ms;
+    padding: 0;
+}
+
+.btn-recolher-sidebar {
+    position: relative;
+    display: flex;
+    justify-self: flex-end;
+    align-self: flex-end;
+}
+
+.btn-icon:hover {
+    background: var(--fundo-destaque);
+    border-color: var(--destaque);
+    color: var(--destaque);
+}
+
+#btn-dashboard {
+    display: flex;
+    border: 0.1rem solid var(--borda-forte);
+    padding: 1rem;
+    font-size: 1.3rem;
+    align-self: center;
+    gap: 0.3rem;
+    transition: all ease-in-out 150ms;
+}
+
+#btn-dashboard:hover {
+    box-shadow: 0 0 0.1rem 0.1rem var(--borda-forte);
+}
+
 .stat-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -131,6 +201,25 @@ aside,
 
 #lista-validacao li.erro {
     color: var(--destaque-vermelho);
+}
+
+.deck-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-bottom: 0.1rem ridge var(--destaque);
+}
+
+.header-titulo {
+    display: flex;
+    flex-grow: 2;
+    flex-direction: column;
+}
+
+.status-salvamento {
+    /* flex-grow: 2; */
+    font-size: 1.5rem;
 }
 
 /* Abas do Board */
@@ -179,14 +268,14 @@ aside,
 
 /* Área do Board */
 .board-content {
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     min-height: 300px;
     overflow: hidden;
 }
 
 .grid-cmc {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: flex-start;
     flex-wrap: wrap;
 }
@@ -194,16 +283,17 @@ aside,
 .cmc-column {
     display: flex;
     flex-direction: column;
-    min-width: 140px;
-    position: relative;
-    padding-bottom: 1rem;
+    align-items: center;
+    justify-content: center;
+
 }
 
 /* ESTILO DO COMANDANTE */
 .cmc-column.commander-column {
-    border-right: 1px dashed var(--borda-forte);
-    padding-right: 1.5rem;
-    margin-right: 0.5rem;
+    border: 1px dashed var(--borda-forte);
+    border-radius: 0.625rem;
+    padding: 0.5rem 1rem;
+
 }
 
 .commander-column .cmc-title {
@@ -245,7 +335,7 @@ aside,
 .card-visual-wrapper:last-child {
     height: 215px;
     overflow: visible;
-    z-index: 10;
+    /* z-index: 2; */
     margin-bottom: 10px;
 }
 
@@ -255,3 +345,4 @@ aside,
     pointer-events: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
 }
+

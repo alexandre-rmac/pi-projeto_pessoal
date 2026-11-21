@@ -91,6 +91,10 @@ btnCriar.addEventListener('click', async () => {
         alert("Preencha o nome, selecione um comandante e verifique seu login.");
         return;
     }
+    if (inputNomeDeck.value.length > 30) {
+        alert("O nome do Deck deve conter até 30 caracteres.")
+        return
+    }
 
     try {
         mostrarLoading();

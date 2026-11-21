@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     configurarImportacaoCSV();
     configurarAcoesPreview();
     configurarBuscaCartas();
+    configurarSidebar();
 
     await carregarDeckInicial();
 });
@@ -33,6 +34,8 @@ function prepararCartas(cartas) {
 }
 
 async function carregarDeckInicial() {
+    document.getElementById('btn-dashboard').href = `/usuario/dashboard-deck.html?id=${idDeck}`;
+    document.getElementById('btn-dashboard-sidebar').href = `/usuario/dashboard-deck.html?id=${idDeck}`;
     try {
         atualizarStatus('salvando');
         const data = await api.buscarDeckCompleto(idDeck, fkUsuario);
@@ -106,25 +109,25 @@ function renderizarAbaAtiva(cartas, comandante) {
         const colComandante = document.createElement('div');
         colComandante.className = 'cmc-column commander-column';
         colComandante.innerHTML = `<span class="cmc-title"><i class="fa-solid fa-crown"></i> Comandante</span>`;
-        
+
         const wrapper = document.createElement('div');
         wrapper.className = 'card-visual-wrapper';
         const cardContainer = document.createElement('div');
         wrapper.appendChild(cardContainer);
         renderizarCarta(comandante, cardContainer);
         wrapper.onclick = () => abrirPreview(comandante, 1, false);
-        
+
         colComandante.appendChild(wrapper);
         grid.appendChild(colComandante);
     }
 
-    Object.keys(cmcGroups).sort((a,b) => a === '7+' ? 1 : (b === '7+' ? -1 : a - b)).forEach(cmc => {
+    Object.keys(cmcGroups).sort((a, b) => a === '7+' ? 1 : (b === '7+' ? -1 : a - b)).forEach(cmc => {
         const cartasCmc = cmcGroups[cmc];
         cartasCmc.sort((a, b) => a.name.localeCompare(b.name));
 
         const col = document.createElement('div');
         col.className = 'cmc-column';
-        
+
         cartasCmc.forEach(carta => {
             const wrapper = document.createElement('div');
             wrapper.className = 'card-visual-wrapper';
@@ -308,13 +311,13 @@ function configurarBuscaCartas() {
 
         try {
             const cardJson = JSON.parse(decodeURIComponent(item.dataset.card));
-            cardJson.idCarta = cardJson.id; 
+            cardJson.idCarta = cardJson.id;
             cardJson.colors = cardJson.colorsStr ? cardJson.colorsStr.split('') : [];
             cardJson.colorsId = cardJson.identidade ? cardJson.identidade.split('') : [];
-            
-            abrirPreview(cardJson, 1, true); 
-        } catch (err) { 
-            console.error("Erro ao ler carta da busca:", err); 
+
+            abrirPreview(cardJson, 1, true);
+        } catch (err) {
+            console.error("Erro ao ler carta da busca:", err);
         }
     });
 }
@@ -341,21 +344,15 @@ function atualizarValidacoes(cartasMainboard, comandante, identidadeDeck) {
         if (c.type.includes('Creature')) criaturas += qtd;
         else if (!c.type.includes('Land')) naoCriaturas += qtd;
 
-        if (!c.type.includes('Basic Land')) copiasMap[c.name] = (copiasMap[c.name] || 0) + qtd;
+        if (!c.type.includes('Basic')) copiasMap[c.name] = (copiasMap[c.name] || 0) + qtd;
 
         if (c.identidade !== 'C' && identidadeDeck !== 'C') {
             for (let cor of c.identidade) if (!identidadeDeck.includes(cor)) valIdentidadeOk = false;
         }
     });
 
-    if (comandante) {
-        totalCartas += 1;
-        cmcTotal += comandante.cmc;
-        if (comandante.type.includes('Creature')) criaturas += 1; else naoCriaturas += 1;
-    }
-
     const cartasNaoTerreno = totalCartas - totalTerrenos;
-    
+    document.getElementById('stat-total-recolhido').innerText = totalCartas
     document.getElementById('stat-total').innerText = totalCartas;
     document.getElementById('stat-criaturas').innerText = criaturas;
     document.getElementById('stat-nao-criaturas').innerText = naoCriaturas;
@@ -363,21 +360,41 @@ function atualizarValidacoes(cartasMainboard, comandante, identidadeDeck) {
     document.getElementById('stat-cmc-medio').innerText = cartasNaoTerreno > 0 ? (cmcTotal / cartasNaoTerreno).toFixed(1) : '0.0';
 
     const valTotal = document.getElementById('val-total');
-    valTotal.innerHTML = totalCartas === 100 
-        ? `<i class="fa-solid fa-circle-check"></i> 100 cartas no deck` 
+    valTotal.innerHTML = totalCartas === 100
+        ? `<i class="fa-solid fa-circle-check"></i> 100 cartas no deck`
         : `<i class="fa-solid fa-circle-xmark"></i> ${totalCartas} / 100 cartas`;
     valTotal.className = totalCartas === 100 ? 'ok' : 'erro';
 
     const valCopias = document.getElementById('val-copias');
     const temCopias = Object.values(copiasMap).some(qtd => qtd > 1);
-    valCopias.innerHTML = !temCopias 
-        ? `<i class="fa-solid fa-circle-check"></i> Sem cópias repetidas` 
+    valCopias.innerHTML = !temCopias
+        ? `<i class="fa-solid fa-circle-check"></i> Sem cópias repetidas`
         : `<i class="fa-solid fa-circle-xmark"></i> Cópias repetidas`;
     valCopias.className = !temCopias ? 'ok' : 'erro';
 
     const valIdentidade = document.getElementById('val-identidade');
-    valIdentidade.innerHTML = valIdentidadeOk 
-        ? `<i class="fa-solid fa-circle-check"></i> Identidade de cor respeitada` 
+    valIdentidade.innerHTML = valIdentidadeOk
+        ? `<i class="fa-solid fa-circle-check"></i> Identidade de cor respeitada`
         : `<i class="fa-solid fa-circle-xmark"></i> Cores fora da identidade`;
     valIdentidade.className = valIdentidadeOk ? 'ok' : 'erro';
+}
+
+function configurarSidebar() {
+    const container = document.querySelector('.container');
+    const btnRecolher = document.getElementById('btn-recolher-sidebar');
+    const btnAbrir = document.getElementById('btn-abrir-sidebar');
+    const sidebarExpandida = document.getElementById('sidebar-expandida');
+    const sidebarRecolhida = document.getElementById('sidebar-recolhida');
+
+    btnRecolher.addEventListener('click', () => {
+        container.classList.add('sidebar-collapsed');
+        sidebarExpandida.classList.add('hidden');
+        sidebarRecolhida.classList.remove('hidden');
+    });
+
+    btnAbrir.addEventListener('click', () => {
+        container.classList.remove('sidebar-collapsed');
+        sidebarRecolhida.classList.add('hidden');
+        sidebarExpandida.classList.remove('hidden');
+    });
 }

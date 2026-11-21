@@ -4,7 +4,7 @@ const fkUsuario = sessionStorage.getItem('ID_USUARIO');
 
 // Paleta de cores padrão do projeto
 const CORES = {
-    W: '#f9faf4', U: '#aae0fa', B: '#a69f9c', R: '#f9a98c', G: '#a5d6a7', C: '#aaa'
+    W: '#fed', U: '#55d', B: '#535', R: '#a33', G: '#373', C: '#aaa'
 };
 const CORES_NOMES = { W: 'Branco', U: 'Azul', B: 'Preto', R: 'Vermelho', G: 'Verde', C: 'Incolor' };
 const TIPOS_NOMES = {
@@ -13,7 +13,7 @@ const TIPOS_NOMES = {
 };
 
 // Configuração global do Chart.js para tema escuro
-Chart.defaults.color = '#aba999';
+Chart.defaults.color = '#dddaaa';
 Chart.defaults.font.family = "'Linden Hill', sans-serif";
 Chart.defaults.plugins.legend.display = false;
 
@@ -23,12 +23,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         mostrarLoading();
         const data = await api.buscarDashboardDeck(idDeck, fkUsuario);
-        
+
         // Preencher Cabeçalho e Cards Básicos
         document.getElementById('titulo-deck').innerText = data.deck.nome;
         document.getElementById('subtitulo-comandante').innerText = `Comandante: ${data.deck.commander}`;
         document.getElementById('btn-voltar').href = `/usuario/editar-deck.html?id=${idDeck}`;
-        
+
         document.getElementById('stat-total').innerText = data.totalCartas;
         document.getElementById('stat-terrenos').innerText = data.totalTerrenos;
         document.getElementById('stat-cmc').innerText = data.cmcMedioPadrao;
@@ -87,7 +87,7 @@ function renderizarDevocao(devocao) {
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            cutout: '75%',
+            cutout: '45%',
             plugins: { legend: { display: true, position: 'right' } }
         }
     });
@@ -120,7 +120,7 @@ function renderizarTipos(tipos) {
     // Ordena do maior para o menor
     const labels = Object.keys(tipos).sort((a, b) => tipos[b] - tipos[a]);
     const valores = labels.map(t => tipos[t]);
-    
+
     const ctx = document.getElementById('chart-tipos').getContext('2d');
 
     new Chart(ctx, {
