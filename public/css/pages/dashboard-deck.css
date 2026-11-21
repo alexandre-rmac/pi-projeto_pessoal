@@ -1,0 +1,59 @@
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--borda);
+    padding-bottom: 1rem;
+}
+
+.btn-outline {
+    display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--borda);
+    padding: 0.6rem 1rem; border-radius: 4px; color: var(--texto); text-decoration: none; transition: 150ms;
+}
+.btn-outline:hover { background: var(--fundo-destaque); border-color: var(--destaque); }
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: var(--fundo-alt); border: 1px solid var(--borda);
+    border-radius: 8px; padding: 1.5rem;
+    display: flex; flex-direction: column;
+}
+
+.stat-header {
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--texto-suave); font-size: 0.9rem; margin-bottom: 1rem;
+}
+
+.stat-card strong { font-size: 2.5rem; font-family: var(--fonte-titulo); color: var(--destaque); line-height: 1; }
+
+.charts-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.chart-card {
+    background: var(--fundo-alt); border: 1px solid var(--borda);
+    border-radius: 8px; padding: 1.5rem;
+    display: flex; flex-direction: column;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 250px; /* Altura fixa para o Chart.js não quebrar o layout */
+    width: 100%;
+}

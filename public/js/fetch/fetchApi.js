@@ -83,5 +83,11 @@ const api = {
         });
         if (!res.ok) throw new Error('Erro ao excluir deck');
         return res.json();
-    }
+    },
+    
+        async buscarDashboardDeck(idDeck, fkUsuario) {
+        const res = await fetch(`/dashboard/deck/${idDeck}?fkUsuario=${fkUsuario}`, { cache: "no-store" });
+        if (!res.ok) throw new Error('Erro ao buscar dashboard do deck');
+        return res.json();
+    },
 };

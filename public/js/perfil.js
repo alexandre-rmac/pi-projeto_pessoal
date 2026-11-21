@@ -129,7 +129,7 @@ function renderizarDecks(decks) {
                 </div>
                 <div class="deck-card-actions">
                     <a href="/usuario/editar-deck.html?id=${deck.id}" class="btn-action"><i class="fa-solid fa-pen"></i> Editar</a>
-                    <a href="/dashboard-deck.html?id=${deck.id}" class="btn-action"><i class="fa-solid fa-chart-simple"></i> Dashboard</a>
+                    <a href="/usuario/dashboard-deck.html?id=${deck.id}" class="btn-action"><i class="fa-solid fa-chart-simple"></i> Dashboard</a>
                     <button class="btn-action excluir" onclick="confirmarExclusao(${deck.id}, '${deck.nome}')"><i class="fa-solid fa-trash"></i> Excluir</button>
                 </div>
             </div>
