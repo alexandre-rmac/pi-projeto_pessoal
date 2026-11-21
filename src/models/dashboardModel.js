@@ -17,7 +17,7 @@ function calcularGeracaoMana(text, identidadeDeck) {
 
     // "Add one mana of any color" conta apenas as cores da identidade
     if (/Add\s+one\s+mana\s+of\s+any\s+color/i.test(text)) {
-        var cores = identidadeDeck === "C" ? "WUBRG" : identidadeDeck; 
+        var cores = identidadeDeck === "C" ? "WUBRG" : identidadeDeck;
         for (var i = 0; i < cores.length; i++) {
             if (gera[cores[i]] !== undefined) gera[cores[i]]++;
         }
@@ -45,25 +45,25 @@ function perfil(fkUsuario) {
         var totalPorDeck = {};
         rs[1].forEach(function (r) { totalPorDeck[r.fk_deck] = Number(r.total); });
 
-        var coresFreq = { W: 0, U: 0, B: 0, R: 0, G: 0 };
+        var coresFreq = { W: 0, U: 0, B: 0, R: 0, G: 0, C: 0 };
         var decksStatus = decks.map(function (d) {
             var identidadeDeck = d.identidade || "C";
-            if (identidadeDeck !== "C") {
-                for (var i = 0; i < identidadeDeck.length; i++) {
-                    if (coresFreq[identidadeDeck[i]] !== undefined) coresFreq[identidadeDeck[i]]++;
-                }
+
+            for (var i = 0; i < identidadeDeck.length; i++) {
+                if (coresFreq[identidadeDeck[i]] !== undefined) coresFreq[identidadeDeck[i]]++;
             }
+
             var total = totalPorDeck[d.id] || 0;
             var status = total < 100 ? "incompleto" : (total === 100 ? "completo" : "invalido");
-            
+
             // Retorna os dados do deck junto com os status calculados
-            return { 
-                id: d.id, 
-                nome: d.nome, 
+            return {
+                id: d.id,
+                nome: d.nome,
                 commander: d.commander,
-                identidade: identidadeDeck, 
-                status: status, 
-                totalMainboard: total 
+                identidade: identidadeDeck,
+                status: status,
+                totalMainboard: total
             };
         });
 
@@ -84,7 +84,7 @@ function perfil(fkUsuario) {
 
 function deck(idDeck, fkUsuario) {
     var sqlDeck = "SELECT id, nome, commander, identidade FROM deck WHERE id = ? AND fk_usuario = ?";
-    
+
     // Busca as cartas da Mainboard com seus tipos agrupados
     var sqlCartas = `
         SELECT c.id, c.nome, c.cmc, c.cores, c.custo_mana, c.texto,
@@ -119,7 +119,7 @@ function deck(idDeck, fkUsuario) {
             cartas.forEach(c => {
                 const qtd = Number(c.quantidade);
                 const isLand = c.tipos && c.tipos.includes('Land');
-                
+
                 totalCartas += qtd;
 
                 if (isLand) {
@@ -185,7 +185,7 @@ function deck(idDeck, fkUsuario) {
 
             // Comandante (Soma ele aos cálculos se não estiver na lista)
             // (Assumindo que o front-end já o inclui na Mainboard e ele veio na query)
-            
+
             const cmcMedioPadrao = cartasUnicasNaoTerreno > 0 ? (cmcTotalSoma / cartasUnicasNaoTerreno) : 0;
             const cmcMedioPonderado = cartasNaoTerrenoQtd > 0 ? (cmcTotalSoma / cartasNaoTerrenoQtd) : 0;
 

@@ -1,12 +1,17 @@
 const fkUsuario = sessionStorage.getItem('ID_USUARIO');
+const nomeUsuario = sessionStorage.getItem('NOME_USUARIO');
 
 const CORES_MAP = {
     W: { nome: 'Branco', hex: '#fed', icone: 'fa-sun', texto: '#111' },
     U: { nome: 'Azul', hex: '#55d', icone: 'fa-droplet', texto: '#111' },
     B: { nome: 'Preto', hex: '#535', icone: 'fa-skull', texto: '#111' },
     R: { nome: 'Vermelho', hex: '#a33', icone: 'fa-fire', texto: '#111' },
-    G: { nome: 'Verde', hex: '#373', icone: 'fa-tree', texto: '#111' }
+    G: { nome: 'Verde', hex: '#373', icone: 'fa-tree', texto: '#111' },
+    C: { nome: 'Devoid', hex: '#777', icone: 'fa-diamond', texto: '#111' }
+    
 };
+
+const COLOR_ORDER = ['W', 'U', 'B', 'R', 'G', 'C'];
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (!fkUsuario) {
@@ -18,6 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function carregarDadosPerfil() {
+    const title = document.getElementById('usuario-nome')
+    title.innerHTML = `Perfil de ${nomeUsuario}`
     try {
         mostrarLoading();
         const data = await api.buscarDashboardPerfil(fkUsuario);
@@ -64,15 +71,15 @@ function renderizarDashboard(data) {
     // 3. Gráfico de Barras (Decks por Cor)
     const grafico = document.getElementById('grafico-cores');
     grafico.innerHTML = '';
-    
-    ['W', 'U', 'B', 'R', 'G'].forEach(cor => {
+
+    COLOR_ORDER.forEach(cor => {
         const qtd = data.coresFreq[cor];
         const pct = data.totalDecks > 0 ? (qtd / data.totalDecks) * 100 : 0;
         const c = CORES_MAP[cor];
 
         grafico.innerHTML += `
             <div class="barra-item">
-                <div class="barra-label"><i class="fa-solid ${c.icone}"></i> ${c.nome}</div>
+                <div class="barra-label"><i class="fa-solid ${c.icone}"></i></div>
                 <div class="barra-track">
                     <div class="barra-fill" style="width: ${pct}%; background: ${c.hex};"></div>
                 </div>
@@ -96,7 +103,10 @@ function renderizarDecks(decks) {
 
     // Renderiza cada deck
     decks.forEach(deck => {
-        const cores = deck.identidade !== 'C' ? deck.identidade.split('') : [];
+        const _c = deck.identidade.split('') || ['C'];
+        const cores = _c.toSorted((a,b) => {
+            return COLOR_ORDER.indexOf(a) - COLOR_ORDER.indexOf(b)
+        })
         let bgGradient = 'background: var(--superficie-2);';
         
         if (cores.length === 1) {
@@ -117,7 +127,7 @@ function renderizarDecks(decks) {
                     <i class="fa-solid fa-circle" style="font-size: 0.5rem; margin-right: 4px;"></i> ${statusLabel}
                 </span>
                 <div style="display: flex; gap: 4px;">
-                    ${cores.map(cor => `<div class="cor-icone" style="width: 18px; height: 18px; font-size: 0.6rem; background: ${CORES_MAP[cor].hex};"><i class="fa-solid ${CORES_MAP[cor].icone}"></i></div>`).join('')}
+                    ${cores.map(cor => `<div class="cor-icone-decks" style="width: 2.1rem; height: 2.1rem; background: ${CORES_MAP[cor].hex};"><i class="fa-solid ${CORES_MAP[cor].icone}"></i></div>`).join('')}
                 </div>
             </div>
             <div class="deck-card-body">

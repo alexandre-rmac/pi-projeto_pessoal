@@ -9,7 +9,7 @@ let resultadosBusca = []; // Cache local dos resultados para evitar nova requisi
 // 1. Limpa a seleção se o usuário começar a digitar novamente
 inputBusca.addEventListener('input', () => {
     comandanteSelecionado = null;
-    
+
     // Se apagar todo o texto, limpa o preview também
     if (inputBusca.value.trim() === '') {
         const previewRender = document.getElementById('card-preview');
@@ -21,27 +21,27 @@ inputBusca.addEventListener('input', () => {
 
 const buscarComandantes = debounce(async (e) => {
     const query = e.target.value.trim();
-    
+
     if (query.length < 2) {
         suggestionsBox.style.display = 'none';
         return;
     }
-    
+
     try {
         resultadosBusca = await api.buscarComandantes(query);
-        
+
         if (resultadosBusca.length === 0) {
             suggestionsBox.style.display = 'none';
             return;
         }
-        
+
         // Renderiza a lista usando apenas o índice do array (evita problemas de caracteres especiais)
         suggestionsBox.innerHTML = resultadosBusca.map((c, index) =>
             `<div class="suggestion-item" data-index="${index}">${c.name}</div>`
         ).join('');
-        
+
         suggestionsBox.style.display = 'block';
-        
+
     } catch (err) {
         console.error(err);
     }
@@ -53,7 +53,7 @@ inputBusca.addEventListener('input', buscarComandantes);
 suggestionsBox.addEventListener('click', (e) => {
     const item = e.target.closest('.suggestion-item');
     if (!item) return;
-    
+
     const index = Number(item.dataset.index);
     const cartaSelecionada = resultadosBusca[index];
 
@@ -98,7 +98,6 @@ btnCriar.addEventListener('click', async () => {
 
     try {
         mostrarLoading();
-
         // Cria o Deck
         const resultadoCriacao = await api.criarDeck({
             nome: nomeDeck,
@@ -117,14 +116,19 @@ btnCriar.addEventListener('click', async () => {
         // Adiciona o Comandante na Mainboard (idBoard: 1, quantidade: 1)
         // Agora garante que usará o ID exato da carta que foi renderizada no preview
         await api.adicionarCartaAoDeck(idNovoDeck, {
-            idCarta: comandanteSelecionado.id, 
+            idCarta: comandanteSelecionado.id,
             idBoard: 1,
             quantidade: 1,
             fkUsuario: fkUsuario
         });
 
-        alert("Deck criado com sucesso!");
+
+        setTimeout(300)
+        
         window.location.href = `editar-deck.html?id=${idNovoDeck}`;
+
+
+        // alert("Deck criado com sucesso!");
 
     } catch (error) {
         console.error(error);

@@ -1,15 +1,10 @@
 .container {
     display: flex;
-    grid-template-columns: auto 1fr 300px;
     gap: 1rem;
     max-width: 100%;
     margin: 0 auto;
     padding: 2rem;
-    transition: grid-template-columns 0.3s ease;
-}
-
-.container.sidebar-collapsed {
-    grid-template-columns: 320px 1fr 70px;
+    transition: flex 0.3s ease;
 }
 
 aside,
@@ -18,6 +13,10 @@ aside,
     border: 1px solid var(--borda);
     border-radius: 0.625rem;
     padding: 1.5rem;
+}
+.deck-area {
+    flex-grow: 2;
+
 }
 
 .sidebar-esquerda {
@@ -105,6 +104,9 @@ aside,
 /* Indicadores e Validações */
 .sidebar-direita {
     position: sticky;
+    display: flex;
+    
+    justify-self: flex-end;
     top: 6rem;
     height: calc(100vh - 8rem);
     overflow-y: auto;
@@ -345,4 +347,3 @@ aside,
     pointer-events: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
 }
-

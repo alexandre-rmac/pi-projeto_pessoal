@@ -9,7 +9,7 @@ function mostrarModal(titulo, mensagemHtml) {
     msgBox.innerHTML = mensagemHtml;
     
     // Recria o botão padrão de fechar
-    btnContainer.innerHTML = `<button class="btn" style="width: 100%;" onclick="document.getElementById('modal-alerta').classList.add('hidden')">Fechar</button>`;
+    btnContainer.innerHTML = `<button class="btn" id="btn-confirmar" style="width: 100%;">Fechar</button>`;
     
     modal.classList.remove('hidden');
 }

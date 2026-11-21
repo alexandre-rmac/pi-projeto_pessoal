@@ -41,41 +41,54 @@
         <header class="perfil-header">
             <div>
                 <span class="subtitulo">SEUS DECKS</span>
-                <h1 class="titulo">Perfil</h1>
+                <h1 id="usuario-nome" class="titulo">Perfil</h1>
                 <p class="descricao">Veja seus decks cadastrados e um resumo rápido da sua coleção.</p>
             </div>
-            <a href="/criar-deck.html" class="btn"><i class="fa-solid fa-plus"></i> Criar Deck</a>
+            <a href="/usuario/criar-deck.html" class="btn"><i class="fa-solid fa-plus"></i> Criar Deck</a>
         </header>
 
         <!-- SEÇÃO SUPERIOR: INDICADORES -->
         <section class="dashboard-top">
             <div class="painel-indicadores">
-                <h3 class="titulo" style="font-size: 1.2rem;">Coleção</h3>
 
-                <div class="stat-box">
-                    <span class="descricao">Total de decks</span>
+                <div class="stat-box total-decks">
+                    <div>
+                        <h3 class="titulo" style="font-size: 1.2rem;">Coleção</h3>
+                        <p class="descricao">Total de decks</p>
+                    </div>
                     <strong id="stat-total-decks" class="titulo">0</strong>
                 </div>
-
+                
+                <div class="stat-box">
+                    <div class="status-lista">
+                        <div>
+                            <div>
+                                <i class="fa-solid fa-circle" style="color: var(--destaque-verde); font-size: 0.6rem;"></i>
+                                Completos 
+                            </div>
+                            <strong id="stat-completos">0</strong>
+                        </div>
+                        <div>
+                            <div>
+                                <i class="fa-solid fa-circle" style="color: var(--destaque); font-size: 0.6rem;"></i>
+                                Incompletos 
+                            </div>
+                            <strong id="stat-incompletos">0</strong>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="stat-box">
                     <span class="descricao">Cores favoritas</span>
                     <div id="cores-favoritas" class="cores-container"></div>
                     <span class="descricao" id="texto-cores"
                         style="font-size: 0.75rem; margin-top: 0.5rem; display: block;">Empate entre ...</span>
                 </div>
-
-                <div class="stat-box">
-                    <div class="status-lista">
-                        <div><i class="fa-solid fa-circle" style="color: var(--destaque-verde); font-size: 0.6rem;"></i>
-                            Completos <strong id="stat-completos">0</strong></div>
-                        <div><i class="fa-solid fa-circle" style="color: var(--destaque); font-size: 0.6rem;"></i>
-                            Incompletos <strong id="stat-incompletos">0</strong></div>
-                    </div>
-                </div>
+                
             </div>
-
+            
             <div class="painel-cores">
-                <h3 class="titulo" style="font-size: 1.2rem; margin-bottom: 1rem;">Decks por cor</h3>
+                <h3 class="titulo" style="font-size: 1.2rem; margin-bottom: 1rem;">Cores por deck</h3>
                 <div id="grafico-cores" class="grafico-barras">
                     <!-- Injetado via JS -->
                 </div>
