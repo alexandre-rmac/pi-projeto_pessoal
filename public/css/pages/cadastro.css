@@ -1,29 +1,30 @@
+.cadastro {
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image:
+        linear-gradient(to right, transparent 0%, var(--fundo) 100%),
+        url(../../assets/imgs/cadastro.svg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .cadastro-container {
     display: flex;
-    height: 100%;
     align-items: center;
     justify-content: center;
+    width: 60%;
+    min-height: 90vh;
+
 }
 
-.cadastro-apresentacao {
-    background-image:
-        linear-gradient(180deg,
-            rgba(18, 19, 16, 0.06) 0%,
-            rgba(18, 19, 16, 0.20) 25%,
-            rgba(18, 19, 16, 1) 100%),
-        url(../../assets/imgs/forja.svg);
-    display: flex;
-    width: 38.75rem;
-    padding: 3rem;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-start;
-    align-self: stretch;
-}
-
+/* --- Tooltip de Senha --- */
 .senha-p-container {
     display: flex;
-    width: 98%;
+    width: 100%;
     justify-content: space-between;
 }
 
@@ -33,7 +34,6 @@
     display: flex;
     width: 1.5rem;
     height: 1.5rem;
-    
     align-items: center;
     justify-content: center;
     background-color: var(--fundo-destaque);
