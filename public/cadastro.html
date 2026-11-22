@@ -6,17 +6,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Alramac | Cadastro</title>
+  <title>A Forja | Cadastro</title>
 
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/navbar.css">
   <link rel="stylesheet" href="/css/pages/login.css">
   <link rel="stylesheet" href="/css/pages/cadastro.css">
+  <link rel="stylesheet" href="/css/modal.css">
   <link rel="icon" href="/assets/icon/favicon2.ico">
   <link rel="preconnect" href="https://fonts.gstatic.com">
 
   <script src="https://kit.fontawesome.com/79924d81b1.js" crossorigin="anonymous"></script>
   <script src="/js/navbar.js"></script>
+  <script src="/js/fetch/fetchLoad.js" defer></script>
+  <script src="/js/components/modal.js" defer></script>
   <script src="/js/cadastro.js" defer></script>
 </head>
 
@@ -35,7 +38,7 @@
         </div>
       </div>
       <div class="form-container">
-        <form class="form-container-interior">
+        <form id="form-cadastro" class="form-container-interior" novalidate>
           <p class="form-subtitulo">ACENDA A SUA FORJA</p>
           <h3 class="form-titulo">Criar Conta</h3>
           <p class="form-descricao">Seu espaço para criar, salvar e aperfeiçoar seus decks de Commander.</p>
@@ -70,12 +73,12 @@
               placeholder="Repita sua senha">
           </div>
           <div class="erro-msg-container">
-            <p id="erro_senha_msg" class="p-erro-msg"></p>
+            <p id="forca_senha_msg" class="p-erro-msg"></p>
           </div>
           <div class="erro-msg-container">
-            <p id="erro_login_msg" class="p-erro-msg"></p>
+            <p id="msg_erro_cadastro" class="p-erro-msg"></p>
           </div>
-          <button type="button" id="btn_cadastrar" class="form-btn-entrar">
+          <button type="submit" id="btn_cadastrar" class="form-btn-entrar">
             <i class="fa-solid fa-arrow-right-long"></i>
             Cadastrar
           </button>
@@ -92,15 +95,22 @@
             <i class="fa-solid fa-fingerprint"></i>
             <p class="form-descricao">Seu deck, no seu espaço</p>
           </div>
-
-
         </form>
       </div>
     </div>
   </section>
 
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <div class="loading-spinner"></div>
+  </div>
 
-
+  <div id="modal-alerta" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3 id="modal-titulo"></h3>
+      <div id="modal-mensagem"></div>
+      <div id="modal-botoes"></div>
+    </div>
+  </div>
 
 </body>
 
