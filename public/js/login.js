@@ -1,82 +1,74 @@
-const btn_entrar = document.getElementById('btn_entrar')
-const msg_erro_login = document.getElementById('erro_login_msg')
+// public/js/login.js
 
-btn_entrar.addEventListener('click', entrar)
-window.addEventListener('pageshow', () => {
-    btn_entrar.disabled = false
-})
+const btn_entrar = document.getElementById('btn_entrar')
+const form_login = document.getElementById('form-login')
+
+form_login.addEventListener('submit', entrar)
+window.addEventListener('pageshow', () => { btn_entrar.disabled = false })
 
 async function entrar(event) {
-    event.preventDefault()
+    if (event) event.preventDefault()
     btn_entrar.disabled = true
-    // aguardar();
+    mostrarLoading()
 
     const ipt_email = document.getElementById('email_input').value
     const ipt_senha = document.getElementById('senha_input').value
 
-    if (ipt_email == "" || ipt_senha == "") {
-        msg_erro_login.innerHTML = 'Insira seu email e sua senha'
+    if (ipt_email === "" || ipt_senha === "") {
+        esconderLoading()
         btn_entrar.disabled = false
-        // finalizarAguardar();
+        mostrarModal('Erro ao entrar', 'Insira seu email e sua senha.')
         return false;
     }
-    else {
-        setTimeout(sumirMensagem, 5000)
-    }
 
-    console.log("FORM LOGIN: ", ipt_email);
-    console.log("FORM SENHA: ", ipt_senha);
-
-    await fetch("/usuarios/autenticar", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            emailServer: ipt_email,
-            senhaServer: ipt_senha
+    try {
+        const resposta = await fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                emailServer: ipt_email,
+                senhaServer: ipt_senha
+            })
         })
-    }).then(function (resposta) {
-        console.log("ESTOU NO THEN DO entrar()!")
 
         if (resposta.ok) {
-            console.log(resposta);
+            const json = await resposta.json()
+            sessionStorage.EMAIL_USUARIO = json.email;
+            sessionStorage.NOME_USUARIO = json.nome;
+            sessionStorage.ID_USUARIO = json.id;
+            sessionStorage.DECKS_USUARIO = JSON.stringify(json.decks)
 
-            return resposta.json().then(json => {
-                console.log(json);
-                console.log(JSON.stringify(json));
-                sessionStorage.EMAIL_USUARIO = json.email;
-                sessionStorage.NOME_USUARIO = json.nome;
-                sessionStorage.ID_USUARIO = json.id;
-                sessionStorage.DECKS_USUARIO = JSON.stringify(json.decks)
+            const decks = json.decks ?? []
+            const destino = decks.length === 0
+                ? './usuario/criar-deck.html'
+                : './usuario/perfil.html';
 
-                if (json.decks.length === 0) {
-                    setTimeout(function () { 
-                        window.location = './usuario/criar-deck.html';
-                    }, 1000)
-                } else {
-                    setTimeout(function () {
-                        window.location = "./usuario/perfil.html";
-                    }, 1000);
+            esconderLoading()
+            btn_entrar.disabled = false
+            mostrarModal(
+                'Login realizado!',
+                'Bem-vindo de volta.',
+                {
+                    texto: 'Continuar',
+                    callback: () => { window.location = destino }
                 }
-
-            });
-
+            )
         } else {
-
-            console.log("Houve um erro ao tentar realizar o login!");
-
-            return resposta.text().then(texto => {
-                console.error(texto);
-                finalizarAguardar(texto);
-            });
+            let texto;
+            try {
+                texto = await resposta.text();
+            } catch (e) {
+                texto = '';
+            }
+            esconderLoading()
+            btn_entrar.disabled = false
+            mostrarModal('Erro ao entrar', texto || 'Houve um erro ao tentar realizar o login.')
         }
-
-    }).catch(function (erro) {
-        console.log(erro);
-    })
-}
-
-function sumirMensagem() {
-    msg_erro_login.innerHTML = ''
+    } catch (erro) {
+        esconderLoading()
+        btn_entrar.disabled = false
+        mostrarModal('Erro ao entrar', 'Houve um erro ao tentar realizar o login.')
+    }
 }

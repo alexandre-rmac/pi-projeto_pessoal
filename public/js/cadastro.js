@@ -1,100 +1,99 @@
-
 const ipt_nome = document.getElementById('cadastro_nome_input')
 const ipt_email = document.getElementById('cadastro_email_input')
 const ipt_senha = document.getElementById('cadastro_senha_input')
 const ipt_confirmacao = document.getElementById('cadastro_confirmar_senha_input')
-const msg_erro_senha = document.getElementById('erro_senha_msg')
-const msg_erro_login = document.getElementById('erro_login_msg')
+const forca_senha_msg = document.getElementById('forca_senha_msg')
+const msg_erro_cadastro = document.getElementById('msg_erro_cadastro')
 const btn_cadastar = document.getElementById('btn_cadastrar')
 const tooltip_senha = document.getElementById('senha_tooltip')
+const form_cadastro = document.getElementById('form-cadastro')
+
 const regex_nome = /^[a-zA-Z0-9]+$/;
 const regex_email = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 var pontos;
 
 window.addEventListener('pageshow', habilitarBtn)
-btn_cadastar.addEventListener('click', cadastrar)
+form_cadastro.addEventListener('submit', cadastrar)
 ipt_senha.addEventListener('input', verificarSenha)
 tooltip_senha.addEventListener('mouseenter', exibirTooltip)
 tooltip_senha.addEventListener('mouseleave', inibirTooltip)
 
-function cadastrar() {
+async function cadastrar(event) {
+    if (event) event.preventDefault()
     btn_cadastar.disabled = true
+    mostrarLoading()
 
-    var erro = true
     var nomeVar = ipt_nome.value;
     var emailVar = ipt_email.value;
     var senhaVar = ipt_senha.value;
     var confirmacaoSenhaVar = ipt_confirmacao.value;
 
-    if (
-        nomeVar == "" ||
-        emailVar == "" ||
-        senhaVar == "" ||
-        confirmacaoSenhaVar == ""
-    ) {
-        msg_erro_login.innerHTML = 'Preencha todos os campos.'
-        return false;
-    } else if (senhaVar != confirmacaoSenhaVar) {
-        msg_erro_login.innerHTML = 'A senha e a confirmação de senha não confere.'
+    var mensagemErro = '';
+
+    if (nomeVar === "" || emailVar === "" || senhaVar === "" || confirmacaoSenhaVar === "") {
+        mensagemErro = 'Preencha todos os campos.';
+    } else if (senhaVar !== confirmacaoSenhaVar) {
+        mensagemErro = 'A senha e a confirmação de senha não conferem.';
     } else if (!regex_nome.test(nomeVar)) {
-        msg_erro_login.innerHTML = 'O nome de usuário só pode letras e números.'
+        mensagemErro = 'O nome de usuário só pode conter letras e números.';
     } else if (!regex_email.test(emailVar)) {
-        msg_erro_login.innerHTML = 'O email digitado não é válido.'
+        mensagemErro = 'O email digitado não é válido.';
     } else if (pontos < 5) {
-        msg_erro_login.innerHTML = 'Insira uma senha forte.'
-    } else {
-        erro = false
+        mensagemErro = 'Insira uma senha forte.';
     }
 
-    if (erro) {
+    if (mensagemErro) {
+        esconderLoading()
         habilitarBtn()
-        setTimeout(sumirMensagem, 5000);
+        mostrarModal('Não foi possível cadastrar', mensagemErro)
         return
     }
-    // Enviando o valor da nova input
-    fetch("/usuarios/cadastrar", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            // crie um atributo que recebe o valor recuperado aqui
-            // Agora vá para o arquivo routes/usuario.js
-            nomeServer: nomeVar,
-            emailServer: emailVar,
-            senhaServer: senhaVar
-        }),
-    })
-        .then(function (resposta) {
-            console.log("resposta: ", resposta);
 
-            if (resposta.ok) {
-                msg_erro_login.innerHTML = "Cadastro realizado com sucesso! Redirecionando para tela de Login..."
-                console.log(
-                    "Cadastro realizado com sucesso! Redirecionando para tela de Login..."
-                );
-
-                setTimeout(() => {
-                    window.location = "login.html";
-                }, "2000");
-
-                // finalizarAguardar();
-            } else {
-                if (resposta.status === 409) {
-                    throw "Este email já está cadastrado"
-                } else {
-                    throw "Houve um erro ao tentar realizar o cadastro!";
-                }
-            }
+    try {
+        const resposta = await fetch("/usuarios/cadastrar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                nomeServer: nomeVar,
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            }),
         })
-        .catch(function (resposta) {
-            msg_erro_login.innerHTML = `${resposta}`
-            console.log(`#ERRO: ${resposta}`);
-            // finalizarAguardar();
-        });
-    limparFormulario()
-    sumirMensagem()
-    return false;
+
+        if (resposta.ok) {
+            esconderLoading()
+            limparFormulario()
+            habilitarBtn()
+            mostrarModal(
+                'Cadastro realizado!',
+                'Sua conta foi criada com sucesso.',
+                {
+                    texto: 'Ir para login',
+                    callback: () => { window.location = 'login.html' }
+                }
+            )
+            return
+        }
+
+        let texto;
+        try {
+            texto = await resposta.text();
+        } catch (e) {
+            texto = '';
+        }
+        if (!texto) {
+            texto = resposta.status === 409
+                ? 'Este email já está cadastrado.'
+                : 'Houve um erro ao tentar realizar o cadastro.';
+        }
+        throw new Error(texto)
+    } catch (err) {
+        esconderLoading()
+        habilitarBtn()
+        mostrarModal('Não foi possível cadastrar', err.message || 'Houve um erro ao tentar realizar o cadastro.')
+    }
 }
 
 function limparFormulario() {
@@ -102,12 +101,6 @@ function limparFormulario() {
     ipt_email.value = ''
     ipt_senha.value = ''
     ipt_confirmacao.value = ''
-    habilitarBtn()
-}
-
-function sumirMensagem() {
-    msg_erro_login.innerHTML = ''
-    msg_erro_senha.innerHTML = ''
 }
 
 function habilitarBtn() {
@@ -134,24 +127,23 @@ function verificarSenha() {
     if (testes.minuscula) pontos++
     if (testes.simbolo) pontos++
     if (pontos < 2) {
-        msg_erro_senha.style.color = getComputedStyle(document.documentElement).getPropertyValue('--destaque-vermelho')
-        msg_erro_senha.innerHTML = 'Senha Fraca'
+        forca_senha_msg.style.color = getComputedStyle(document.documentElement).getPropertyValue('--destaque-vermelho')
+        forca_senha_msg.innerHTML = 'Senha Fraca'
     } else if (pontos < 5) {
-        msg_erro_senha.style.color = getComputedStyle(document.documentElement).getPropertyValue('--destaque-suave')
-        msg_erro_senha.innerHTML = 'Senha Média'
+        forca_senha_msg.style.color = getComputedStyle(document.documentElement).getPropertyValue('--destaque-suave')
+        forca_senha_msg.innerHTML = 'Senha Média'
     } else {
-        msg_erro_senha.style.color = getComputedStyle(document.documentElement).getPropertyValue('--destaque-verde')
-        msg_erro_senha.innerHTML = 'Senha Forte'
+        forca_senha_msg.style.color = getComputedStyle(document.documentElement).getPropertyValue('--destaque-verde')
+        forca_senha_msg.innerHTML = 'Senha Forte'
     }
-    setTimeout(sumirMensagem, 5000)
 }
 
 function exibirTooltip() {
     const pop = document.getElementById('pop-up')
     pop.style.display = 'block'
 }
+
 function inibirTooltip() {
     const pop = document.getElementById('pop-up')
     pop.style.display = 'none'
-
 }
