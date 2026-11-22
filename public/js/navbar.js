@@ -46,7 +46,7 @@ if (!sessionStorage.NOME_USUARIO && window.location.pathname.includes("/usuario/
         container.innerHTML = `
       <nav class="navbar">
         <a href="${ROUTES.inicio}" class="navbar-head">
-          <span class="navbar-logo" aria-hidden="true"></span>
+          <span class="navbar-logo" ></span>
           <span class="navbar-titulo">A Forja</span>
         </a>
         <div class="navbar-link-container">
