@@ -1,34 +1,54 @@
+/* Adicionado box-sizing global para evitar que padding quebre o layout */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--fundo);
+    background-image:
+        linear-gradient(to bottom, transparent 0%, var(--fundo) 50%),
+        url("../../../assets/imgs/mundo.svg");
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center top;
 }
 
+/* O container principal centraliza a página e define a largura máxima */
 .main {
     display: flex;
     flex-direction: column;
-
+    width: 100%;
+    max-width: 90rem;
+    
+    margin: 0 auto;
+    
 }
 
 .inicio {
     display: flex;
-    width: 90rem;
-    min-height: 40.625rem;
-    max-height: fit-content;
-    padding: 3.5rem 4rem 4rem 4rem;
+    width: 100%;
+    min-height: 32rem;
+    padding: 1rem 4rem;
     align-items: center;
-    justify-content: center;
-    gap: 3rem;
+    justify-content: space-between;
+    gap: 2rem;
 }
 
 .icone-gold {
-    color: var(--destaque)
+    color: var(--destaque);
 }
 
 .apresentacao {
     display: flex;
     width: fit-content;
+    max-width: 50%;
     flex-direction: column;
     align-items: flex-start;
     gap: 1.75rem;
@@ -39,7 +59,7 @@ body {
     font-family: var(--fonte-titulo);
     font-size: 5rem;
     font-weight: 400;
-
+    line-height: 1.05;
 }
 
 .subtitulo-container {
@@ -61,7 +81,6 @@ body {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    letter-spacing: undefined;
 }
 
 .descricao {
@@ -82,29 +101,30 @@ body {
     line-height: normal;
 }
 
+/* ---- Card de preview do deck ---- */
 .visao {
     display: flex;
-    height: 32.5rem;
+    min-height: 26rem;
     flex-direction: column;
     align-items: flex-start;
     border-radius: 0.375rem;
     border: 1px solid #34382D;
     background: var(--fundo-alt);
-}
-
-.img-visao {
-    display: inline-block;
-    content: url(../../../assets/imgs/mundo.svg);
+    align-self: center;
+    width: 100%;
+    max-width: 38rem;
+    /* Adicionado limite para o card não esticar demais */
 }
 
 .previa {
     display: flex;
-    padding: 1.75rem;
+    padding: 2rem;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.125rem;
+    gap: 1.25rem;
     align-self: stretch;
-
+    flex: 1;
+    justify-content: center;
 }
 
 .previa-header {
@@ -153,6 +173,15 @@ body {
     line-height: normal;
 }
 
+.commander-nome {
+    color: var(--texto-suave);
+    font-family: var(--fonte-corpo);
+    font-size: 0.85rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
 .regua {
     height: 0.0625rem;
     align-self: stretch;
@@ -182,21 +211,53 @@ body {
     line-height: normal;
 }
 
+.previa-tipos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    align-self: stretch;
+}
+
+.tipo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    color: var(--texto-suave);
+    font-family: var(--fonte-corpo);
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.tipo-numero {
+    color: var(--texto);
+    font-family: var(--fonte-titulo);
+    font-size: 1.1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+
+/* ---- Seção "Por que usar" (3 cards) ---- */
 .potencial {
     display: flex;
-    max-width: max-content;
+    width: 100%;
     padding: 3.5rem 4rem;
     flex-direction: column;
     align-items: flex-start;
     gap: 2rem;
-    border-top: 1px solid #34382D;
-    border-bottom: 1px solid #34382D;
-    background: var(--fundo-alt);
+    border-bottom: 1px solid var(--borda-forte);
+    background: linear-gradient(to top, var(--fundo-alt) 20%, transparent 50%);
+
 }
 
 .potencial-titulo-container {
     display: flex;
     width: 48.125rem;
+    max-width: 100%;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
@@ -221,23 +282,19 @@ body {
 }
 
 .potencial-cards-container {
-    display: flex;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
-    /* align-self: stretch; */
+    align-self: stretch;
 }
 
 .potencial-card {
     display: flex;
-    max-width: 25.7rem;
-    height: 14.5em;
-
     padding: 1.5rem;
     flex-direction: column;
     align-items: flex-start;
     justify-content: stretch;
     gap: 1rem;
-
     border-radius: 0.375rem;
     border: 1px solid var(--borda);
     background: var(--fundo);
@@ -263,12 +320,13 @@ body {
     font-style: normal;
     font-weight: 400;
     line-height: 170%;
-
 }
 
+/* ---- Seção "Como funciona" (4 cards) ---- */
 .recursos {
     display: flex;
-    /* max-width: max-content; */
+    width: 100%;
+    /* Mudou de 90rem para 100% */
     padding: 4rem;
     flex-direction: column;
     align-items: flex-start;
@@ -280,6 +338,7 @@ body {
     justify-content: space-between;
     align-items: flex-end;
     align-self: stretch;
+    
 }
 
 .recursos-titulo-container {
@@ -308,19 +367,27 @@ body {
 }
 
 .recursos-cards-container {
-    display: flex;
-    align-items: flex-start;
-    gap: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    align-self: stretch;
+    margin-bottom: 0;
+
+    background-image:
+        linear-gradient(to right, var(--fundo) 0%, transparent 80%),
+        linear-gradient(to left, var(--fundo) 0%, transparent 80%),
+        url("../../../assets/imgs/recursos.svg");
+    background-size: cover;
+    background-position: right center;
+    background-repeat: no-repeat;
 }
 
 .recursos-card {
     display: flex;
-    width: 25.7rem;
     padding-top: 1.5rem;
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
-
     border-top: 0.15rem solid var(--borda);
 }
 
@@ -344,17 +411,19 @@ body {
     font-style: normal;
     font-weight: 400;
     line-height: 175%;
-
 }
 
+/* ---- CTA final ---- */
 .recursos-chamado {
     display: flex;
-    padding: 1.75rem 2rem;
+    width: 100%;
+    /* Mudou de 90rem para 100% */
+    padding: 1.75rem 4rem;
+    /* Ajustado para alinhar com as outras seções */
     justify-content: space-between;
     align-items: center;
-    align-self: stretch;
-
     background: var(--superficie-2);
+    margin-top: -2.5rem;
 }
 
 .recursos-chamado-titulo-container {
@@ -382,13 +451,15 @@ body {
     line-height: normal;
 }
 
+/* ---- Footer ---- */
 .footer {
     display: flex;
+    width: 100%;
+    /* Mudou de 90rem para 100% */
     padding: 2rem 4rem;
+    /* Alinhado com o padding das outras seções */
     justify-content: space-between;
     align-items: center;
-    align-self: stretch;
-
     border-top: 0.15rem solid var(--borda);
 }
 
