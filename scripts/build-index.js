@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const ac_path = '../../bulkdata/';
+const ac_path = '../../bulkdata/'
 const INPUT_FILE = path.join(__dirname, ac_path, 'AtomicCards.json');
+console.log(__dirname, INPUT_FILE)
 const OUTPUT_FILE = path.join(__dirname, '..', 'data', 'cards-index.json');
 
 if (!fs.existsSync(INPUT_FILE)) {
@@ -10,66 +11,49 @@ if (!fs.existsSync(INPUT_FILE)) {
 }
 
 console.log('Lendo AtomicCards.json...');
-const atomicCards = JSON.parse(fs.readFileSync(INPUT_FILE, 'utf8'));
+const rawData = fs.readFileSync(INPUT_FILE, 'utf8');
+const atomicCards = JSON.parse(rawData);
+
 const cardsMap = atomicCards.data || atomicCards;
 
 const index = [];
-const ignoradasList = [];
+let ignoradasList = [];
 
-for (const [key, rawList] of Object.entries(cardsMap)) {
-    const cardList = Array.isArray(rawList) ? rawList : [rawList];
-    const front = cardList[0];
-
-    if (!front || !front.name) {
-        ignoradasList.push(front);
-        continue;
+for (const [key, cardList] of Object.entries(cardsMap)) {
+    // Cada chave pode ter múltiplas faces (split cards), pegamos a primeira para simplificar
+    const card = cardList[0];
+    if (!card || !card.name) {
+        ignoradasList.push(cardList[key]);
+        continue
+    };
+    const uuid = card.identifiers.scryfallOracleId;
+    if(!uuid) {
+        ignoradasList.push(card)
+        continue
     }
-
-    const uuid = front.identifiers?.scryfallOracleId;
-    if (!uuid) {
-        ignoradasList.push(front);
-        continue;
+    if (card.isFunny) {
+        ignoradasList.push(card)
+        continue
     }
-
-    if (front.isFunny) {
-        ignoradasList.push(front);
-        continue;
-    }
-
-    const rank = Number(front.edhrecRank * front.edhrecSaltiness);
-    const edhRank = rank > 0 ? rank : 0;
-
+    const rank = Number(card.edhrecRank * card.edhrecSaltiness)
+    const edhRank =  rank > 0 ? rank : 0
     index.push({
-        // --- campos agregados da carta física (face 0) ---
-        name: front.name,
+        name: card.name,
         uuid,
-        layout: front.layout || 'normal',
-        manaCost: front.manaCost || '',
-        manaValue: Number(front.manaValue) || 0,
-        type: front.type || '',
-        text: front.text || '',
-        power: front.power || '',
-        loyalty: front.loyalty || '',
-        toughness: front.toughness || '',
-        colors: front.colors || [],
-        colorId: front.colorIdentity || [],
-        keywords: front.keywords || [],
-        types: front.types || [],
-        subtypes: front.subtypes || [],
-        supertypes: front.supertypes || [],
-        edhRank,
-
-        // --- faces (só populado quando há mais de uma) ---
-        faces: cardList.map((f, i) => ({
-            ordem: i,
-            side: f.side || null,
-            nome: f.name,
-            custo_mana: f.manaCost || '',
-            tipo_linha: f.type || '',
-            texto: f.text || '',
-            poder: f.power || '',
-            resistencia: f.toughness || ''
-        }))
+        manaCost: card.manaCost || '',
+        manaValue: Number(card.manaValue) || 0,
+        type: card.type || '',
+        text: card.text || '',
+        power: card.power || '',
+        loyalty: card.loyalty || '',
+        toughness: card.toughness || '',
+        colors: card.colors || [],
+        colorId: card.colorIdentity || [],
+        keywords: card.keywords || [], 
+        types: card.types || [],
+        subtypes: card.subtypes || [],
+        supertypes: card.supertypes || [],
+        edhRank: edhRank,
     });
 }
 

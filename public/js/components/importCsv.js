@@ -31,26 +31,24 @@ function configurarImportacaoCSV() {
     csvInput.addEventListener('change', function (e) {
         const file = e.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
-
+        
         reader.onload = async function (event) {
-            // Remove BOM UTF-8
             let texto = event.target.result;
             if (texto.charCodeAt(0) === 0xFEFF) texto = texto.slice(1);
-
+            
             const linhas = texto.split(/\r?\n/).filter(l => l.trim() !== '');
             const agregado = new Map(); // nome(lower) -> { nome, quantidade }
             let totalCartasLista = 0;
             const comandanteNome = (deckData.deck.commander || '').toLowerCase();
-
+            
             for (const raw of linhas) {
                 const linha = raw.trim();
                 if (!linha) continue;
-
+                
                 const campos = parseLinhaCSV(linha);
                 let qtd, nome;
-
+                
                 if (campos.length >= 2) {
                     // Formato "N,Nome" (CSV do arquivo)
                     qtd = parseInt(campos[0], 10);
@@ -61,14 +59,15 @@ function configurarImportacaoCSV() {
                     qtd = m ? parseInt(m[1], 10) : 1;
                     nome = m ? m[2].trim() : linha;
                 }
-
+                
                 if (!Number.isFinite(qtd) || qtd <= 0 || !nome) continue;
                 if (nome.toLowerCase() === comandanteNome) continue; // ignora comandante ANTES de somar
-
+                
                 totalCartasLista += qtd;
-
+                
                 const key = nome.toLowerCase();
                 const existente = agregado.get(key);
+                console.log(key)
                 if (existente) existente.quantidade += qtd;
                 else agregado.set(key, { nome, quantidade: qtd });
             }

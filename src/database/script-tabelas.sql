@@ -49,11 +49,10 @@ CREATE TABLE IF NOT EXISTS carta (
     cores VARCHAR(5),
     identidade VARCHAR(5),
     edhRank FLOAT4,
-	custo_mana VARCHAR(100),
+	custo_mana VARCHAR(50),
 	texto TEXT,
-	poder VARCHAR(10),
-	resistencia VARCHAR(10),
-	layout VARCHAR(30) NOT NULL DEFAULT 'normal'
+	poder VARCHAR(5),
+	resistencia VARCHAR(5)
 );
 
 CREATE TABLE IF NOT EXISTS deck_carta (
@@ -66,7 +65,6 @@ CREATE TABLE IF NOT EXISTS deck_carta (
     FOREIGN KEY (fk_carta) REFERENCES carta(id),
     FOREIGN KEY (fk_board) REFERENCES board(id)
 );
-
 
 CREATE TABLE IF NOT EXISTS tipo (
 	id INT PRIMARY KEY AUTO_INCREMENT,
@@ -81,23 +79,6 @@ CREATE TABLE IF NOT EXISTS tipo_carta (
     FOREIGN KEY (fk_carta) REFERENCES carta(id)
     
 );
-
-CREATE TABLE IF NOT EXISTS carta_face (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    fk_carta INT NOT NULL,
-    ordem TINYINT NOT NULL,
-    side CHAR(1) NULL,
-    nome VARCHAR(255) NOT NULL,
-    custo_mana VARCHAR(100),
-    tipo_linha VARCHAR(150),
-    texto TEXT,
-    poder VARCHAR(10),
-    resistencia VARCHAR(10),
-    UNIQUE KEY uq_carta_face_ordem (fk_carta, ordem),
-    CONSTRAINT fk_carta_face_carta
-        FOREIGN KEY (fk_carta) REFERENCES carta(id) ON DELETE CASCADE
-);
-
 
 INSERT INTO board (descricao) VALUES
 ('Mainboard'),

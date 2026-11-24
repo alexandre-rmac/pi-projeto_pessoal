@@ -29,20 +29,15 @@
 <body>
     <div id="navbar-container"></div>
 
-    <!-- Tela de Carregamento -->
-    <div id="loading-overlay" class="hidden">
-        <div class="spinner"></div>
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
     </div>
 
     <div id="modal-alerta" class="modal-overlay hidden">
         <div class="modal-content">
-            <h3 class="titulo" id="modal-titulo" style="margin-bottom: 1rem;">Aviso</h3>
-            <div id="modal-mensagem"
-                style="margin-bottom: 1.5rem; max-height: 200px; overflow-y: auto; font-size: 0.9rem;">
-            </div>
-            <div class="modal-botoes">
-                <button id="btn-confirmar" class="btn">Concluir</button>
-            </div>
+            <h3 id="modal-titulo"></h3>
+            <div id="modal-mensagem"></div>
+            <div id="modal-botoes"></div>
         </div>
     </div>
 
