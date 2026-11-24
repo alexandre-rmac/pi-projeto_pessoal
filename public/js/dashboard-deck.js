@@ -100,18 +100,15 @@ function renderizarProducao(producao) {
     const ctx = document.getElementById('chart-producao').getContext('2d');
 
     new Chart(ctx, {
-        type: 'bar',
+        type: 'doughnut',
         data: {
             labels: labels.map(c => CORES_NOMES[c]),
-            datasets: [{ data: valores, backgroundColor: cores, borderRadius: 4 }]
+            datasets: [{ data: valores, backgroundColor: cores, borderWidth: 0 }]
         },
         options: {
-            indexAxis: 'y', // Transforma em barras horizontais
             responsive: true, maintainAspectRatio: false,
-            scales: {
-                x: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
-                y: { grid: { display: false } }
-            }
+            cutout: '45%',
+            plugins: { legend: { display: true, position: 'right' } }
         }
     });
 }

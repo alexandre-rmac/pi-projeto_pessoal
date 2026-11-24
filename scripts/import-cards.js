@@ -18,7 +18,7 @@ if (!fs.existsSync(INDEX_FILE)) {
 
 (async () => {
     console.log('Lendo cards-index.json...');
-    const cartas = JSON.parse(fs.readFileSync(INDEX_FILE), 'utf8')
+    const cartas = JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'))
 
     const conn = await mysql.createConnection({
         host: process.env.DB_HOST,

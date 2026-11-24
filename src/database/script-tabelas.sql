@@ -65,9 +65,6 @@ CREATE TABLE IF NOT EXISTS deck_carta (
     FOREIGN KEY (fk_carta) REFERENCES carta(id),
     FOREIGN KEY (fk_board) REFERENCES board(id)
 );
-show create table deck_carta;
-alter table deck_carta drop constraint deck_carta_ibfk_1;
-alter table deck_carta add constraint FOREIGN KEY (fk_deck) references deck(id) ON delete cascade;
 
 CREATE TABLE IF NOT EXISTS tipo (
 	id INT PRIMARY KEY AUTO_INCREMENT,

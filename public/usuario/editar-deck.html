@@ -23,17 +23,16 @@
 
 <body>
     <div id="navbar-container"></div>
-    <div id="loading-overlay" class="hidden">
-        <div class="spinner"></div>
+
+        <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
     </div>
 
     <div id="modal-alerta" class="modal-overlay hidden">
         <div class="modal-content">
-            <h3 class="titulo" id="modal-titulo" style="margin-bottom: 1rem;">Aviso</h3>
-            <div id="modal-mensagem"
-                style="margin-bottom: 1.5rem; max-height: 200px; overflow-y: auto; font-size: 0.9rem;"></div>
-            <button class="btn" style="width: 100%;"
-                onclick="document.getElementById('modal-alerta').classList.add('hidden')">Fechar</button>
+            <h3 id="modal-titulo"></h3>
+            <div id="modal-mensagem"></div>
+            <div id="modal-botoes"></div>
         </div>
     </div>
 
@@ -142,7 +141,7 @@
             </div>
 
             <!-- VISÃO RECOLHIDA -->
-            <div id="sidebar-recolhida" style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem; height: 100%;">
+            <div id="sidebar-recolhida">
                 <button id="btn-abrir-sidebar" class="btn-icon" title="Expandir painel">
                     <i class="fa-solid fa-chevron-left"></i>
                 </button>

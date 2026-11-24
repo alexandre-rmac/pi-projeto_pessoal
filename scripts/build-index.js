@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const ac_path = '../../Forja/mtgapi/data/'
+const ac_path = '../../bulkdata/'
 const INPUT_FILE = path.join(__dirname, ac_path, 'AtomicCards.json');
 console.log(__dirname, INPUT_FILE)
 const OUTPUT_FILE = path.join(__dirname, '..', 'data', 'cards-index.json');
